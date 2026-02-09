@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VibeShop</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; color: #333; }
+    header { background: #1a1a2e; color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+    header h1 { font-size: 1.5rem; }
+    .nav-links { display: flex; gap: 1rem; align-items: center; }
+    .nav-links a, .nav-links button { color: white; text-decoration: none; background: none; border: none; cursor: pointer; font-size: 0.9rem; }
+    .nav-links button:hover { text-decoration: underline; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 1rem; }
+    .product-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: transform 0.2s; }
+    .product-card:hover { transform: translateY(-4px); }
+    .product-card img { width: 100%; height: 200px; object-fit: cover; }
+    .product-info { padding: 1rem; }
+    .product-info h3 { margin-bottom: 0.5rem; }
+    .product-info .price { font-size: 1.25rem; font-weight: 700; color: #e94560; }
+    .product-info .stock { font-size: 0.8rem; color: #888; margin-top: 0.25rem; }
+    .btn { background: #e94560; color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem; margin-top: 0.5rem; }
+    .btn:hover { background: #d63851; }
+    .btn-secondary { background: #16213e; }
+    .search-bar { width: 100%; padding: 0.75rem 1rem; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem; margin-bottom: 1rem; }
+    .search-bar:focus { outline: none; border-color: #e94560; }
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 100; justify-content: center; align-items: center; }
+    .modal.active { display: flex; }
+    .modal-content { background: white; padding: 2rem; border-radius: 12px; width: 400px; max-width: 90%; }
+    .modal-content h2 { margin-bottom: 1rem; }
+    .modal-content input { width: 100%; padding: 0.6rem; margin-bottom: 0.75rem; border: 1px solid #ddd; border-radius: 6px; font-size: 0.9rem; }
+    .reviews { margin-top: 1rem; }
+    .review { background: #f9f9f9; padding: 0.75rem; border-radius: 8px; margin-bottom: 0.5rem; }
+    .review .author { font-weight: 600; }
+    .review .rating { color: #e94560; }
+    .toast { position: fixed; bottom: 2rem; right: 2rem; background: #16213e; color: white; padding: 1rem 1.5rem; border-radius: 8px; display: none; z-index: 200; }
+    .toast.show { display: block; }
+    #product-detail { display: none; }
+    .back-btn { background: none; border: none; color: #e94560; cursor: pointer; font-size: 1rem; margin-bottom: 1rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>VibeShop</h1>
+    <div class="nav-links">
+      <span id="user-display"></span>
+      <button onclick="showLogin()" id="login-btn">Login</button>
+      <button onclick="logout()" id="logout-btn" style="display:none">Logout</button>
+    </div>
+  </header>
+
+  <div class="container">
+    <div id="product-list">
+      <h2>Products</h2>
+      <input type="text" class="search-bar" placeholder="Search products..." oninput="searchProducts(this.value)">
+      <div class="products-grid" id="products-grid"></div>
+    </div>
+
+    <div id="product-detail">
+      <button class="back-btn" onclick="showProductList()">&larr; Back to products</button>
+      <div id="detail-content"></div>
+    </div>
+  </div>
+
+  <!-- Login Modal -->
+  <div class="modal" id="login-modal">
+    <div class="modal-content">
+      <h2>Login</h2>
+      <input type="text" id="login-username" placeholder="Username">
+      <input type="password" id="login-password" placeholder="Password">
+      <button class="btn" onclick="login()" style="width:100%">Login</button>
+      <p style="text-align:center;margin-top:0.5rem;font-size:0.8rem;color:#888">
+        Demo: alice / password123
+      </p>
+    </div>
+  </div>
+
+  <!-- Review Modal -->
+  <div class="modal" id="review-modal">
+    <div class="modal-content">
+      <h2>Write a Review</h2>
+      <input type="number" id="review-rating" placeholder="Rating (1-5)" min="1" max="5">
+      <input type="text" id="review-comment" placeholder="Your review...">
+      <button class="btn" onclick="submitReview()" style="width:100%">Submit</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    let token = localStorage.getItem('token');
+    let currentUser = JSON.parse(localStorage.getItem('user') || 'null');
+    let currentProductId = null;
+
+    // Update UI based on auth state
+    function updateAuthUI() {
+      if (currentUser) {
+        document.getElementById('user-display').textContent = `Hi, ${currentUser.username}`;
+        document.getElementById('login-btn').style.display = 'none';
+        document.getElementById('logout-btn').style.display = 'inline';
+      } else {
+        document.getElementById('user-display').textContent = '';
+        document.getElementById('login-btn').style.display = 'inline';
+        document.getElementById('logout-btn').style.display = 'none';
+      }
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    // Auth
+    function showLogin() { document.getElementById('login-modal').classList.add('active'); }
+
+    async function login() {
+      const username = document.getElementById('login-username').value;
+      const password = document.getElementById('login-password').value;
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        token = data.token;
+        currentUser = data.user;
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(currentUser));
+        document.getElementById('login-modal').classList.remove('active');
+        updateAuthUI();
+        showToast('Logged in!');
+      } else {
+        showToast(data.error);
+      }
+    }
+
+    function logout() {
+      token = null;
+      currentUser = null;
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      updateAuthUI();
+      showToast('Logged out');
+    }
+
+    // Products
+    async function loadProducts() {
+      const res = await fetch('/api/products');
+      const products = await res.json();
+      renderProducts(products);
+    }
+
+    async function searchProducts(query) {
+      if (!query) return loadProducts();
+      const res = await fetch(`/api/products/search?q=${query}`);
+      const products = await res.json();
+      renderProducts(products);
+    }
+
+    function renderProducts(products) {
+      const grid = document.getElementById('products-grid');
+      grid.innerHTML = products.map(p => `
+        <div class="product-card" onclick="showProduct(${p.id})">
+          <img src="${p.image_url}" alt="${p.name}" onerror="this.src='https://picsum.photos/400/200'">
+          <div class="product-info">
+            <h3>${p.name}</h3>
+            <p style="font-size:0.85rem;color:#666;margin-bottom:0.5rem">${p.description || ''}</p>
+            <div class="price">$${p.price.toFixed(2)}</div>
+            <div class="stock">${p.stock} in stock</div>
+            <button class="btn" onclick="event.stopPropagation(); addToOrder(${p.id}, ${p.price})">Add to Cart</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function showProduct(id) {
+      currentProductId = id;
+      const res = await fetch(`/api/products/${id}`);
+      const product = await res.json();
+
+      document.getElementById('product-list').style.display = 'none';
+      document.getElementById('product-detail').style.display = 'block';
+
+      // [VULN: XSS - review comments rendered as raw HTML]
+      document.getElementById('detail-content').innerHTML = `
+        <div style="display:flex;gap:2rem;flex-wrap:wrap">
+          <img src="${product.image_url}" style="width:400px;height:300px;object-fit:cover;border-radius:12px" onerror="this.src='https://picsum.photos/400/300'">
+          <div>
+            <h2>${product.name}</h2>
+            <p style="color:#666;margin:0.5rem 0">${product.description || ''}</p>
+            <div class="price" style="font-size:1.5rem;margin:1rem 0">$${product.price.toFixed(2)}</div>
+            <p>${product.stock} in stock</p>
+            <button class="btn" onclick="addToOrder(${product.id}, ${product.price})">Add to Cart</button>
+            ${currentUser ? `<button class="btn btn-secondary" onclick="showReviewModal()" style="margin-left:0.5rem">Write Review</button>` : ''}
+          </div>
+        </div>
+        <div class="reviews" style="margin-top:2rem">
+          <h3>Reviews</h3>
+          ${product.reviews && product.reviews.length > 0
+            ? product.reviews.map(r => `
+              <div class="review">
+                <span class="author">${r.username}</span>
+                <span class="rating">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</span>
+                <p>${r.comment}</p>
+              </div>
+            `).join('')
+            : '<p style="color:#888;margin-top:0.5rem">No reviews yet.</p>'
+          }
+        </div>
+      `;
+    }
+
+    function showProductList() {
+      document.getElementById('product-list').style.display = 'block';
+      document.getElementById('product-detail').style.display = 'none';
+    }
+
+    // Orders
+    async function addToOrder(productId, price) {
+      // [VULN: Creates order without auth, hardcoded user_id]
+      const userId = currentUser ? currentUser.id : 1;
+      const res = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_id: userId,
+          items: [{ product_id: productId, quantity: 1, price: price }]
+        })
+      });
+      if (res.ok) showToast('Added to cart!');
+    }
+
+    // Reviews
+    function showReviewModal() {
+      document.getElementById('review-modal').classList.add('active');
+    }
+
+    async function submitReview() {
+      const rating = document.getElementById('review-rating').value;
+      const comment = document.getElementById('review-comment').value;
+      const res = await fetch(`/api/products/${currentProductId}/reviews`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ rating: parseInt(rating), comment })
+      });
+      if (res.ok) {
+        document.getElementById('review-modal').classList.remove('active');
+        showToast('Review submitted!');
+        showProduct(currentProductId);
+      }
+    }
+
+    // Close modals on background click
+    document.querySelectorAll('.modal').forEach(m => {
+      m.addEventListener('click', (e) => {
+        if (e.target === m) m.classList.remove('active');
+      });
+    });
+
+    // Init
+    updateAuthUI();
+    loadProducts();
+  </script>
+</body>
+</html>
