@@ -106,11 +106,48 @@ If `--fix` is passed:
 ═══════════════════════════════════════════
 ```
 
-## Step 5: Output Files
+## Step 5: Generate Test Suite (only if --fix flag)
+
+If `--fix` was passed, after fixing all issues:
+
+1. Launch the **test-generator** subagent via Task tool
+2. It generates tests that verify each fix works correctly
+3. Run the test suite and report results:
+
+```
+Tests: [passed]/[total] passing
+```
+
+## Step 6: Output Files
 
 Write results to:
-- `vibecheck.json` — Machine-readable full results (findings, scores, fixes applied)
-- `vibecheck-report.html` — Beautiful HTML report card (if template available)
+
+### vibecheck.json
+Machine-readable full results:
+```json
+{
+  "project": "project-name",
+  "timestamp": "ISO-8601",
+  "stack": "detected stack",
+  "score_before": { "overall": "F", "security": "F", "auth": "D", "secrets": "F", "tests": "F" },
+  "score_after": { "overall": "B+", "security": "A", "auth": "A", "secrets": "A", "tests": "B" },
+  "findings": [...],
+  "fixes_applied": 14,
+  "tests_generated": 33,
+  "tests_passing": 33
+}
+```
+
+### vibecheck-report.html
+Generate a self-contained HTML report card. Read the template at `templates/report.html` (relative to the plugin directory) for the design reference. The report must include:
+
+1. Project name and scan date
+2. Overall Vibe Score (before → after if fixes applied)
+3. Category breakdown with letter grades
+4. All findings grouped by severity
+5. Fix status for each finding
+
+The HTML must be self-contained (embedded CSS, no external dependencies) so it works as a standalone shareable file.
 
 ## Vibe Preservation Rules
 

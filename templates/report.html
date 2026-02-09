@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vibe Check Report - VibeShop</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0f1117; --surface: #1a1d27; --surface2: #242836; --border: #2e3347;
+    --text: #e2e8f0; --muted: #8892a8; --mono: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+    --green: #22c55e; --blue: #3b82f6; --yellow: #eab308; --orange: #f97316; --red: #ef4444;
+  }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, 'Segoe UI', sans-serif; line-height: 1.6; padding: 2rem 1rem; }
+  .container { max-width: 720px; margin: 0 auto; }
+
+  /* Header */
+  header { text-align: center; margin-bottom: 2.5rem; }
+  header h1 { font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--muted); font-weight: 500; }
+  header .project { font-size: 2rem; font-weight: 700; margin: 0.25rem 0 0.5rem; }
+  header .date { color: var(--muted); font-size: 0.85rem; }
+
+  /* Grade Hero */
+  .grade-hero { text-align: center; padding: 2.5rem 1rem; background: var(--surface); border-radius: 16px; border: 1px solid var(--border); margin-bottom: 2rem; }
+  .grade-transition { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1rem; }
+  .grade-old { font-size: 3rem; font-weight: 800; opacity: 0.35; }
+  .grade-arrow { font-size: 1.5rem; color: var(--muted); }
+  .grade-new { font-size: 5.5rem; font-weight: 900; line-height: 1; animation: gradeReveal 0.6s ease-out; }
+  @keyframes gradeReveal { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .grade-summary { color: var(--muted); font-size: 0.95rem; }
+  .grade-summary strong { color: var(--text); }
+
+  /* Categories */
+  .categories { display: grid; gap: 0.75rem; margin-bottom: 2rem; }
+  .cat { display: grid; grid-template-columns: 1fr auto 60px; align-items: center; gap: 1rem; padding: 1rem 1.25rem; background: var(--surface); border-radius: 10px; border: 1px solid var(--border); }
+  .cat-info h3 { font-size: 0.95rem; font-weight: 600; }
+  .cat-info .weight { font-size: 0.75rem; color: var(--muted); }
+  .cat-bar { width: 120px; height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
+  .cat-bar-fill { height: 100%; border-radius: 3px; animation: barFill 1s ease-out forwards; transform-origin: left; }
+  @keyframes barFill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  .cat-grade { font-size: 1.25rem; font-weight: 800; text-align: right; min-width: 40px; }
+  .cat-detail { font-size: 0.8rem; color: var(--muted); text-align: right; white-space: nowrap; }
+
+  /* Findings */
+  .findings-section { margin-bottom: 2rem; }
+  .findings-section h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+  .sev-group { margin-bottom: 1.5rem; }
+  .sev-label { display: inline-block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; padding: 0.2rem 0.6rem; border-radius: 4px; margin-bottom: 0.75rem; }
+  .sev-critical { background: rgba(239,68,68,0.15); color: var(--red); }
+  .sev-high { background: rgba(249,115,22,0.15); color: var(--orange); }
+  .sev-medium { background: rgba(234,179,8,0.15); color: var(--yellow); }
+  .sev-low { background: rgba(59,130,246,0.15); color: var(--blue); }
+
+  .finding { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 0.5rem; }
+  .finding-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.75rem; margin-bottom: 0.4rem; }
+  .finding-id { font-family: var(--mono); font-size: 0.8rem; color: var(--muted); }
+  .finding-title { font-weight: 600; font-size: 0.95rem; }
+  .finding-loc { font-family: var(--mono); font-size: 0.8rem; color: var(--muted); }
+  .finding-desc { font-size: 0.85rem; color: var(--muted); margin-bottom: 0.5rem; }
+  .badge-fixed { font-size: 0.7rem; font-weight: 600; padding: 0.15rem 0.5rem; border-radius: 4px; background: rgba(34,197,94,0.15); color: var(--green); white-space: nowrap; }
+  .badge-open { font-size: 0.7rem; font-weight: 600; padding: 0.15rem 0.5rem; border-radius: 4px; background: rgba(239,68,68,0.15); color: var(--red); white-space: nowrap; }
+
+  pre.snippet { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 0.75rem 1rem; font-family: var(--mono); font-size: 0.78rem; overflow-x: auto; color: var(--muted); line-height: 1.5; margin-top: 0.5rem; }
+
+  /* Footer */
+  footer { text-align: center; padding-top: 1.5rem; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.8rem; }
+  footer a { color: var(--blue); text-decoration: none; }
+
+  /* Grade colors */
+  .g-a { color: var(--green); } .g-b { color: var(--blue); } .g-c { color: var(--yellow); }
+  .g-d { color: var(--orange); } .g-f { color: var(--red); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <h1>Vibe Check Report</h1>
+    <div class="project">VibeShop</div>
+    <div class="date">February 9, 2026</div>
+  </header>
+
+  <section class="grade-hero">
+    <div class="grade-transition">
+      <span class="grade-old g-f">F</span>
+      <span class="grade-arrow">&rarr;</span>
+      <span class="grade-new g-b">B+</span>
+    </div>
+    <div class="grade-summary">
+      <strong>53 issues</strong> found &middot; <strong>14 fixed</strong> &middot; <strong>5 remaining</strong>
+    </div>
+  </section>
+
+  <section class="categories">
+    <div class="cat">
+      <div class="cat-info"><h3>Security</h3><span class="weight">30% weight</span></div>
+      <div><div class="cat-bar"><div class="cat-bar-fill" style="width:95%;background:var(--green)"></div></div>
+      <div class="cat-detail">F &rarr; A &middot; 5 fixed</div></div>
+      <div class="cat-grade g-a">A</div>
+    </div>
+    <div class="cat">
+      <div class="cat-info"><h3>Auth</h3><span class="weight">25% weight</span></div>
+      <div><div class="cat-bar"><div class="cat-bar-fill" style="width:92%;background:var(--green)"></div></div>
+      <div class="cat-detail">D &rarr; A &middot; 2 fixed</div></div>
+      <div class="cat-grade g-a">A</div>
+    </div>
+    <div class="cat">
+      <div class="cat-info"><h3>Secrets</h3><span class="weight">15% weight</span></div>
+      <div><div class="cat-bar"><div class="cat-bar-fill" style="width:95%;background:var(--green)"></div></div>
+      <div class="cat-detail">F &rarr; A &middot; 1 fixed</div></div>
+      <div class="cat-grade g-a">A</div>
+    </div>
+    <div class="cat">
+      <div class="cat-info"><h3>Tests</h3><span class="weight">15% weight</span></div>
+      <div><div class="cat-bar"><div class="cat-bar-fill" style="width:80%;background:var(--blue)"></div></div>
+      <div class="cat-detail">F &rarr; B &middot; 33 tests</div></div>
+      <div class="cat-grade g-b">B</div>
+    </div>
+    <div class="cat">
+      <div class="cat-info"><h3>Performance</h3><span class="weight">10% weight</span></div>
+      <div><div class="cat-bar"><div class="cat-bar-fill" style="width:85%;background:var(--blue)"></div></div>
+      <div class="cat-detail">C &rarr; B+ &middot; 0 issues</div></div>
+      <div class="cat-grade g-b">B+</div>
+    </div>
+    <div class="cat">
+      <div class="cat-info"><h3>Accessibility</h3><span class="weight">5% weight</span></div>
+      <div><div class="cat-bar"><div class="cat-bar-fill" style="width:0%;background:var(--muted)"></div></div>
+      <div class="cat-detail">Not scanned</div></div>
+      <div class="cat-grade" style="color:var(--muted)">N/A</div>
+    </div>
+  </section>
+
+  <section class="findings-section">
+    <h2>Findings</h2>
+
+    <div class="sev-group">
+      <div class="sev-label sev-critical">Critical</div>
+
+      <div class="finding">
+        <div class="finding-header">
+          <div><span class="finding-id">SEC-001</span> <span class="finding-title">SQL Injection in search endpoint</span></div>
+          <span class="badge-fixed">Fixed</span>
+        </div>
+        <div class="finding-loc">app.js:45</div>
+        <div class="finding-desc">User input passed directly into SQL query string without parameterization. Allows full database read/write/delete.</div>
+        <pre class="snippet">// Before
+db.all(`SELECT * FROM products WHERE name LIKE '%${req.query.q}%'`);
+
+// After
+db.all(`SELECT * FROM products WHERE name LIKE ?`, [`%${req.query.q}%`]);</pre>
+      </div>
+
+      <div class="finding">
+        <div class="finding-header">
+          <div><span class="finding-id">SEC-002</span> <span class="finding-title">Stored XSS in review display</span></div>
+          <span class="badge-fixed">Fixed</span>
+        </div>
+        <div class="finding-loc">public/index.html:87</div>
+        <div class="finding-desc">Review text rendered with innerHTML, allowing script injection via crafted review content.</div>
+        <pre class="snippet">// Before
+reviewDiv.innerHTML = review.text;
+
+// After
+reviewDiv.textContent = review.text;</pre>
+      </div>
+
+      <div class="finding">
+        <div class="finding-header">
+          <div><span class="finding-id">AUTH-001</span> <span class="finding-title">Missing authentication on admin routes</span></div>
+          <span class="badge-fixed">Fixed</span>
+        </div>
+        <div class="finding-loc">app.js:120</div>
+        <div class="finding-desc">Admin endpoints for user management and order deletion accessible without any authentication check.</div>
+      </div>
+
+      <div class="finding">
+        <div class="finding-header">
+          <div><span class="finding-id">SECRET-001</span> <span class="finding-title">Hardcoded JWT secret in source</span></div>
+          <span class="badge-fixed">Fixed</span>
+        </div>
+        <div class="finding-loc">app.js:8</div>
+        <div class="finding-desc">JWT signing secret hardcoded as string literal. Anyone with repo access can forge auth tokens.</div>
+        <pre class="snippet">// Before
+const JWT_SECRET = "super_secret_key_123";
+
+// After
+const JWT_SECRET = process.env.JWT_SECRET;</pre>
+      </div>
+    </div>
+
+    <div class="sev-group">
+      <div class="sev-label sev-high">High</div>
+
+      <div class="finding">
+        <div class="finding-header">
+          <div><span class="finding-id">AUTH-002</span> <span class="finding-title">IDOR on order endpoints</span></div>
+          <span class="badge-fixed">Fixed</span>
+        </div>
+        <div class="finding-loc">app.js:98</div>
+        <div class="finding-desc">Order lookup uses user-supplied ID without verifying ownership. Any authenticated user can view or modify other users' orders.</div>
+      </div>
+    </div>
+
+    <div class="sev-group">
+      <div class="sev-label sev-medium">Medium</div>
+
+      <div class="finding">
+        <div class="finding-header">
+          <div><span class="finding-id">SEC-003</span> <span class="finding-title">No rate limiting on API endpoints</span></div>
+          <span class="badge-fixed">Fixed</span>
+        </div>
+        <div class="finding-loc">app.js:1</div>
+        <div class="finding-desc">No rate limiting middleware configured. Login and search endpoints vulnerable to brute-force and DoS.</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Generated by <a href="https://github.com/anthropics/claude-code">Vibe Check</a> &mdash; a Claude Code plugin</p>
+    <p style="margin-top:0.25rem">2026-02-09 14:32:00 UTC</p>
+  </footer>
+
+</div>
+</body>
+</html>
