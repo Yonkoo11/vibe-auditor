@@ -90,6 +90,13 @@
   <div class="toast" id="toast"></div>
 
   <script>
+    function escapeHtml(str) {
+      if (!str) return '';
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
     let token = localStorage.getItem('token');
     let currentUser = JSON.parse(localStorage.getItem('user') || 'null');
     let currentProductId = null;
@@ -166,10 +173,10 @@
       const grid = document.getElementById('products-grid');
       grid.innerHTML = products.map(p => `
         <div class="product-card" onclick="showProduct(${p.id})">
-          <img src="${p.image_url}" alt="${p.name}" onerror="this.src='https://picsum.photos/400/200'">
+          <img src="${escapeHtml(p.image_url)}" alt="${escapeHtml(p.name)}" onerror="this.src='https://picsum.photos/400/200'">
           <div class="product-info">
-            <h3>${p.name}</h3>
-            <p style="font-size:0.85rem;color:#666;margin-bottom:0.5rem">${p.description || ''}</p>
+            <h3>${escapeHtml(p.name)}</h3>
+            <p style="font-size:0.85rem;color:#666;margin-bottom:0.5rem">${escapeHtml(p.description || '')}</p>
             <div class="price">$${p.price.toFixed(2)}</div>
             <div class="stock">${p.stock} in stock</div>
             <button class="btn" onclick="event.stopPropagation(); addToOrder(${p.id}, ${p.price})">Add to Cart</button>
@@ -186,13 +193,12 @@
       document.getElementById('product-list').style.display = 'none';
       document.getElementById('product-detail').style.display = 'block';
 
-      // [VULN: XSS - review comments rendered as raw HTML]
       document.getElementById('detail-content').innerHTML = `
         <div style="display:flex;gap:2rem;flex-wrap:wrap">
-          <img src="${product.image_url}" style="width:400px;height:300px;object-fit:cover;border-radius:12px" onerror="this.src='https://picsum.photos/400/300'">
+          <img src="${escapeHtml(product.image_url)}" style="width:400px;height:300px;object-fit:cover;border-radius:12px" onerror="this.src='https://picsum.photos/400/300'">
           <div>
-            <h2>${product.name}</h2>
-            <p style="color:#666;margin:0.5rem 0">${product.description || ''}</p>
+            <h2>${escapeHtml(product.name)}</h2>
+            <p style="color:#666;margin:0.5rem 0">${escapeHtml(product.description || '')}</p>
             <div class="price" style="font-size:1.5rem;margin:1rem 0">$${product.price.toFixed(2)}</div>
             <p>${product.stock} in stock</p>
             <button class="btn" onclick="addToOrder(${product.id}, ${product.price})">Add to Cart</button>
@@ -204,9 +210,9 @@
           ${product.reviews && product.reviews.length > 0
             ? product.reviews.map(r => `
               <div class="review">
-                <span class="author">${r.username}</span>
+                <span class="author">${escapeHtml(r.username)}</span>
                 <span class="rating">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</span>
-                <p>${r.comment}</p>
+                <p>${escapeHtml(r.comment)}</p>
               </div>
             `).join('')
             : '<p style="color:#888;margin-top:0.5rem">No reviews yet.</p>'
@@ -222,17 +228,26 @@
 
     // Orders
     async function addToOrder(productId, price) {
-      // [VULN: Creates order without auth, hardcoded user_id]
-      const userId = currentUser ? currentUser.id : 1;
+      if (!token) {
+        showToast('Please login to add items to cart');
+        showLogin();
+        return;
+      }
       const res = await fetch('/api/orders', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({
-          user_id: userId,
-          items: [{ product_id: productId, quantity: 1, price: price }]
+          items: [{ product_id: productId, quantity: 1 }]
         })
       });
       if (res.ok) showToast('Added to cart!');
+      else if (res.status === 401) {
+        showToast('Session expired, please login again');
+        logout();
+      }
     }
 
     // Reviews

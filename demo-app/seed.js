@@ -1,3 +1,4 @@
+const bcrypt = require('bcryptjs');
 const db = require('./db');
 
 // Clear existing data
@@ -6,12 +7,13 @@ db.exec('DELETE FROM order_items');
 db.exec('DELETE FROM orders');
 db.exec('DELETE FROM products');
 db.exec('DELETE FROM users');
+db.exec("DELETE FROM sqlite_sequence");
 
 // Seed users
 const insertUser = db.prepare('INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)');
-insertUser.run('admin', 'admin@vibeshop.com', 'admin123', 'admin');
-insertUser.run('alice', 'alice@example.com', 'password123', 'user');
-insertUser.run('bob', 'bob@example.com', 'bobpass', 'user');
+insertUser.run('admin', 'admin@vibeshop.com', bcrypt.hashSync('admin123', 10), 'admin');
+insertUser.run('alice', 'alice@example.com', bcrypt.hashSync('password123', 10), 'user');
+insertUser.run('bob', 'bob@example.com', bcrypt.hashSync('bobpass00', 10), 'user');
 
 // Seed products
 const insertProduct = db.prepare('INSERT INTO products (name, description, price, stock, image_url) VALUES (?, ?, ?, ?, ?)');
@@ -36,4 +38,4 @@ insertItem.run(order.lastInsertRowid, 1, 1, 79.99);
 insertItem.run(order.lastInsertRowid, 2, 1, 129.99);
 
 console.log('Database seeded successfully!');
-console.log('Users: admin/admin123, alice/password123, bob/bobpass');
+console.log('Seeded users: admin, alice, bob');
