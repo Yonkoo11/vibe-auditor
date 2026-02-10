@@ -17,7 +17,8 @@ function createApp(db) {
   app.use(express.json());
   app.use(express.static(path.join(__dirname, 'public')));
 
-  const JWT_SECRET = process.env.JWT_SECRET || 'fallback-dev-secret';
+  const JWT_SECRET = process.env.JWT_SECRET;
+  if (!JWT_SECRET) throw new Error('JWT_SECRET environment variable is required');
 
   // Helper to create JWT
   function generateToken(user) {
@@ -158,6 +159,12 @@ function createApp(db) {
     if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
       return res.status(400).json({ error: 'Rating must be an integer between 1 and 5' });
     }
+    if (!comment || typeof comment !== 'string' || comment.trim() === '') {
+      return res.status(400).json({ error: 'Comment must be a non-empty string' });
+    }
+    if (comment.length > 1000) {
+      return res.status(400).json({ error: 'Comment must be 1000 characters or fewer' });
+    }
     db.prepare('INSERT INTO reviews (product_id, user_id, rating, comment) VALUES (?, ?, ?, ?)').run(
       req.params.id, req.user.id, rating, comment
     );
@@ -173,6 +180,15 @@ function createApp(db) {
 
   app.post('/api/admin/products', authenticate, requireAdmin, (req, res) => {
     const { name, description, price, stock, image_url } = req.body;
+    if (!name || typeof name !== 'string' || name.trim() === '') {
+      return res.status(400).json({ error: 'Name must be a non-empty string' });
+    }
+    if (typeof price !== 'number' || price <= 0) {
+      return res.status(400).json({ error: 'Price must be a positive number' });
+    }
+    if (stock !== undefined && (!Number.isInteger(stock) || stock < 0)) {
+      return res.status(400).json({ error: 'Stock must be a non-negative integer' });
+    }
     const result = db.prepare(
       'INSERT INTO products (name, description, price, stock, image_url) VALUES (?, ?, ?, ?, ?)'
     ).run(name, description, price, stock, image_url);
@@ -186,6 +202,9 @@ function createApp(db) {
 
   app.put('/api/admin/users/:id/role', authenticate, requireAdmin, (req, res) => {
     const { role } = req.body;
+    if (role !== 'user' && role !== 'admin') {
+      return res.status(400).json({ error: 'Role must be either user or admin' });
+    }
     db.prepare('UPDATE users SET role = ? WHERE id = ?').run(role, req.params.id);
     res.json({ message: 'Role updated' });
   });
@@ -193,6 +212,9 @@ function createApp(db) {
   // ==================== USER PROFILE ====================
 
   app.get('/api/users/:id', authenticate, (req, res) => {
+    if (req.user.id !== parseInt(req.params.id) && req.user.role !== 'admin') {
+      return res.status(403).json({ error: 'Forbidden' });
+    }
     const user = db.prepare('SELECT id, username, email, role, created_at FROM users WHERE id = ?').get(req.params.id);
     if (!user) return res.status(404).json({ error: 'User not found' });
     res.json(user);

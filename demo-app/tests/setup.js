@@ -3,7 +3,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const createApp = require('../app');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-dev-secret';
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) throw new Error('JWT_SECRET must be set in environment for tests');
 
 function createTestDb() {
   const db = new Database(':memory:');

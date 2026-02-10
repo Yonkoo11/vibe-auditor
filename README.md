@@ -8,13 +8,13 @@ A Claude Code plugin that audits vibe-coded projects and auto-fixes them. One co
 /vibecheck --fix
 
 ═══════════════════════════════════════════
-  VIBE SCORE: F → B+  (18 issues fixed)
+  VIBE SCORE: F → B+  (39 issues fixed)
 ═══════════════════════════════════════════
 
   Security:      F → A   (5 critical fixed)
   Auth:          D → A   (2 missing guards added)
   Secrets:       F → A   (API keys moved to .env)
-  Tests:         F → B   (33 tests generated)
+  Tests:         F → B   (50 tests generated)
 ═══════════════════════════════════════════
 ```
 
@@ -70,10 +70,11 @@ Included demo app with **20 planted vulnerabilities** across all severity levels
 - **Vibe Score: F**
 
 ### After (`vibecheck-fixed` branch)
-- 18 vulnerabilities fixed with surgical edits
-- 33 tests generated and passing (auth, authorization, validation, core)
+- 39 vulnerabilities fixed across 2 passes
+- 50 tests generated and passing (auth, authorization, validation, core, second-pass)
 - bcrypt password hashing, parameterized queries, ownership checks
-- Secrets moved to .env, security headers added, rate limiting on auth
+- Secrets moved to .env (no fallback), security headers, rate limiting, input validation
+- Profile access control, admin input validation, review length limits
 - **Vibe Score: B+**
 
 ## Architecture
@@ -81,7 +82,9 @@ Included demo app with **20 planted vulnerabilities** across all severity levels
 ```
 vibe-check/
 ├── .claude-plugin/
-│   └── plugin.json           # Plugin manifest
+│   ├── plugin.json           # Plugin manifest
+│   └── hooks/
+│       └── pre-edit.sh       # Guardian: blocks hardcoded secrets
 ├── commands/
 │   └── vibecheck.md          # /vibecheck slash command
 ├── agents/
@@ -91,10 +94,8 @@ vibe-check/
 │   └── test-generator.md     # Test scaffolding generator
 ├── skills/
 │   └── vibecheck/SKILL.md    # Auto-activation triggers
-├── hooks/
-│   └── pre-edit.sh           # Guardian: blocks hardcoded secrets
 ├── templates/
-│   └── report.html           # HTML report card
+│   └── report.html           # HTML report card template
 └── demo-app/                 # VibeShop (20 planted vulns)
 ```
 

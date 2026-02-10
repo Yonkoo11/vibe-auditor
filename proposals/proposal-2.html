@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THE VIBE REPORT</title>
+<!--
+╔══════════════════════════════════════════════════════════════╗
+║  UX ARCHITECTURE — "The Vibe Report"                        ║
+║  DNA Code: DNA-F-H-F-M-E                                    ║
+║  Layout: Full-bleed | Nav: Hidden | Hero: Full-viewport     ║
+║  Color: Monochrome | Typography: Serif                      ║
+║                                                              ║
+║  INFORMATION HIERARCHY:                                      ║
+║  1. Masthead (100vh) — newspaper identity + headline         ║
+║  2. Lead Story — drop cap, two-column editorial prose        ║
+║  3. The Evidence — inverted dark section, data bars          ║
+║  4. How It Works — sidebar/column layout                     ║
+║  5. The Verdict — pull quote, full-bleed                     ║
+║  6. Classified — install box styled as newspaper ad          ║
+║  7. Colophon — footer with publication details               ║
+║                                                              ║
+║  INTERACTION MODEL:                                          ║
+║  - Scroll-driven reveal (IntersectionObserver)               ║
+║  - Score bars animate on scroll into view                    ║
+║  - No nav; the page IS the story, read top to bottom         ║
+║  - Hidden nav triggered by scroll-up (newspaper metaphor:    ║
+║    flip back to the masthead)                                ║
+║                                                              ║
+║  RESPONSIVE STRATEGY:                                        ║
+║  - 375px: Single column, stacked layout, smaller masthead    ║
+║  - 768px+: Two-column body, sidebar layouts, full masthead   ║
+║  - 1200px+: Max content width with full-bleed backgrounds    ║
+║                                                              ║
+║  ACCESSIBILITY:                                              ║
+║  - All contrast >= 4.5:1 (verified)                          ║
+║  - Semantic HTML: article, section, aside, header, footer    ║
+║  - prefers-reduced-motion respected                          ║
+║  - Focus-visible states on all interactive elements          ║
+║  - Skip-to-content link                                      ║
+╚══════════════════════════════════════════════════════════════╝
+-->
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+/* ═══════════════════════════════════════
+   RESET & BASE
+   ═══════════════════════════════════════ */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --paper: #faf9f6;
+  --ink: #1a1a1a;
+  --red: #c41e3a;
+  --muted: #6b6b6b;
+  --rule: #d4d4d4;
+  --serif-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --serif-body: 'Lora', Georgia, 'Times New Roman', serif;
+  --mono: 'JetBrains Mono', 'Courier New', monospace;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif-body);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Skip to content */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0.5rem 1rem;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  z-index: 1000;
+  text-decoration: none;
+}
+.skip-link:focus {
+  top: 1rem;
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
+}
+
+/* Focus states */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
+}
+
+/* ═══════════════════════════════════════
+   DNA BADGE (fixed, top-right)
+   ═══════════════════════════════════════ */
+.dna-badge {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  padding: 0.25rem 0.5rem;
+  z-index: 100;
+  line-height: 1;
+}
+
+/* ═══════════════════════════════════════
+   HIDDEN NAV (appears on scroll up)
+   ═══════════════════════════════════════ */
+.hidden-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--paper);
+  border-bottom: 2px solid var(--ink);
+  padding: 0.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 90;
+  transform: translateY(-100%);
+  transition: transform 0.4s var(--ease-out);
+}
+.hidden-nav.visible {
+  transform: translateY(0);
+}
+.hidden-nav__title {
+  font-family: var(--serif-display);
+  font-weight: 900;
+  font-size: 0.9rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+.hidden-nav__date {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--muted);
+}
+
+/* ═══════════════════════════════════════
+   SECTION REVEAL ANIMATION
+   ═══════════════════════════════════════ */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .hidden-nav {
+    transition: none;
+  }
+  .bar-fill {
+    transition: none !important;
+  }
+}
+
+/* ═══════════════════════════════════════
+   MASTHEAD / HERO (100vh)
+   ═══════════════════════════════════════ */
+.masthead {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
+  position: relative;
+  border-bottom: 4px double var(--ink);
+}
+
+.masthead__rule-top {
+  width: 100%;
+  border: none;
+  border-top: 1px solid var(--ink);
+  margin-bottom: 0.5rem;
+}
+.masthead__rule-top-thick {
+  width: 100%;
+  border: none;
+  border-top: 3px solid var(--ink);
+  margin-bottom: 1.5rem;
+}
+
+.masthead__nameplate {
+  font-family: var(--serif-display);
+  font-weight: 900;
+  font-size: clamp(3rem, 10vw, 7.5rem);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 0.9;
+  margin-bottom: 0.25rem;
+}
+
+.masthead__meta {
+  font-family: var(--mono);
+  font-size: clamp(0.55rem, 1.2vw, 0.7rem);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 2rem;
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.masthead__meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.masthead__meta-divider {
+  width: 3px;
+  height: 3px;
+  background: var(--muted);
+  border-radius: 0;
+}
+
+.masthead__headline {
+  font-family: var(--serif-display);
+  font-weight: 900;
+  font-size: clamp(1.8rem, 5vw, 3.8rem);
+  line-height: 1.1;
+  max-width: 900px;
+  margin-bottom: 1.25rem;
+  letter-spacing: -0.01em;
+}
+.masthead__headline .red {
+  color: var(--red);
+}
+
+.masthead__deck {
+  font-family: var(--serif-body);
+  font-size: clamp(1rem, 2vw, 1.35rem);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--muted);
+  max-width: 600px;
+  line-height: 1.5;
+}
+
+.masthead__scroll-cue {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+.masthead__scroll-cue span {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.scroll-line {
+  width: 1px;
+  height: 40px;
+  background: var(--ink);
+  position: relative;
+  overflow: hidden;
+}
+.scroll-line::after {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--red);
+  animation: scrollPulse 2s var(--ease-out) infinite;
+}
+@keyframes scrollPulse {
+  0% { top: -100%; }
+  50% { top: 100%; }
+  100% { top: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-line::after { animation: none; top: 0; }
+}
+
+/* ═══════════════════════════════════════
+   CONTENT WRAPPER (for padded sections)
+   ═══════════════════════════════════════ */
+.content-wrap {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* ═══════════════════════════════════════
+   LEAD STORY
+   ═══════════════════════════════════════ */
+.lead {
+  padding: 4rem 0 3rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.lead__kicker {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 0.75rem;
+}
+
+.lead__title {
+  font-family: var(--serif-display);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 3.5vw, 2.4rem);
+  line-height: 1.15;
+  margin-bottom: 0.5rem;
+  max-width: 700px;
+}
+
+.lead__byline {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.lead__body {
+  column-count: 2;
+  column-gap: 2.5rem;
+  column-rule: 1px solid var(--rule);
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+
+.lead__body p {
+  margin-bottom: 1.25rem;
+}
+
+.lead__body p:first-of-type::first-letter {
+  font-family: var(--serif-display);
+  font-weight: 900;
+  font-size: 4.2rem;
+  float: left;
+  line-height: 0.75;
+  margin-right: 0.1em;
+  margin-top: 0.1em;
+  color: var(--red);
+}
+
+.lead__pullquote {
+  font-family: var(--serif-display);
+  font-style: italic;
+  font-size: 1.35rem;
+  line-height: 1.4;
+  color: var(--ink);
+  border-left: 3px solid var(--red);
+  padding-left: 1.25rem;
+  margin: 1.5rem 0;
+  break-inside: avoid;
+}
+
+/* ═══════════════════════════════════════
+   THE EVIDENCE (inverted dark section)
+   ═══════════════════════════════════════ */
+.evidence {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 4rem 0;
+  border-top: 4px solid var(--red);
+  border-bottom: 4px solid var(--red);
+}
+
+.evidence__header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.evidence__kicker {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 0.5rem;
+}
+
+.evidence__title {
+  font-family: var(--serif-display);
+  font-weight: 900;
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  letter-spacing: 0.02em;
+}
+
+.evidence__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  max-width: 800px;
+  margin: 0 auto 3rem;
+}
+
+.evidence__column {
+  padding: 1.5rem 2rem;
+}
+.evidence__column:first-child {
+  border-right: 1px solid rgba(250,249,246,0.15);
+}
+
+.evidence__column-label {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(250,249,246,0.5);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.score-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.score-label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  width: 80px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.score-grade {
+  font-family: var(--serif-display);
+  font-weight: 900;
+  font-size: 1.1rem;
+  width: 24px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.score-grade.failing {
+  color: var(--red);
+}
+.score-grade.passing {
+  color: #4ade80;
+}
+
+.score-bar {
+  flex: 1;
+  height: 8px;
+  background: rgba(250,249,246,0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  width: 0;
+  transition: width 1.2s var(--ease-out);
+}
+.bar-fill.failing {
+  background: var(--red);
+}
+.bar-fill.passing {
+  background: #4ade80;
+}
+.bar-fill.partial {
+  background: #facc15;
+}
+
+.evidence__summary {
+  text-align: center;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(250,249,246,0.1);
+}
+
+.evidence__summary-line {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.evidence__summary-grade {
+  font-family: var(--serif-display);
+  font-weight: 900;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+.evidence__summary-grade .failing {
+  color: var(--red);
+}
+.evidence__summary-grade .arrow {
+  font-family: var(--mono);
+  font-size: 1.5rem;
+  color: rgba(250,249,246,0.4);
+}
+.evidence__summary-grade .passing {
+  color: #4ade80;
+}
+
+.evidence__stats {
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.evidence__stat {
+  text-align: center;
+}
+.evidence__stat-number {
+  font-family: var(--serif-display);
+  font-weight: 900;
+  font-size: 1.8rem;
+  display: block;
+}
+.evidence__stat-label {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(250,249,246,0.5);
+}
+
+/* ═══════════════════════════════════════
+   HOW IT WORKS (sidebar layout)
+   ═══════════════════════════════════════ */
+.how-it-works {
+  padding: 4rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.how-it-works__layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2.5rem;
+}
+
+.how-it-works__main {}
+
+.how-it-works__kicker {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 0.75rem;
+}
+
+.how-it-works__title {
+  font-family: var(--serif-display);
+  font-weight: 700;
+  font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+  margin-bottom: 2rem;
+  line-height: 1.2;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+  align-items: start;
+}
+
+.step__number {
+  font-family: var(--serif-display);
+  font-weight: 900;
+  font-size: 1.8rem;
+  line-height: 1;
+  color: var(--ink);
+  text-align: center;
+}
+
+.step__content {}
+
+.step__title {
+  font-family: var(--serif-display);
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.step__desc {
+  font-size: 0.9rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.step__code {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0.15rem 0.45rem;
+  display: inline-block;
+  margin-top: 0.25rem;
+}
+
+/* Sidebar */
+.how-it-works__sidebar {
+  border-left: 1px solid var(--rule);
+  padding-left: 2rem;
+}
+
+.sidebar__title {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.sidebar__item {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--rule);
+}
+.sidebar__item:last-child {
+  border-bottom: none;
+}
+
+.sidebar__item-label {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.25rem;
+}
+
+.sidebar__item-value {
+  font-family: var(--serif-display);
+  font-weight: 700;
+  font-size: 1.15rem;
+}
+
+.sidebar__item-detail {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 0.15rem;
+  line-height: 1.5;
+}
+
+/* ═══════════════════════════════════════
+   THE VERDICT (full-bleed pull quote)
+   ═══════════════════════════════════════ */
+.verdict {
+  padding: 5rem 2rem;
+  text-align: center;
+  border-bottom: 1px solid var(--rule);
+}
+
+.verdict__rule {
+  width: 60px;
+  border: none;
+  border-top: 3px solid var(--red);
+  margin: 0 auto 2rem;
+}
+
+.verdict__quote {
+  font-family: var(--serif-display);
+  font-weight: 900;
+  font-size: clamp(1.6rem, 4vw, 3rem);
+  line-height: 1.2;
+  max-width: 750px;
+  margin: 0 auto 1rem;
+  letter-spacing: -0.01em;
+}
+
+.verdict__attribution {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ═══════════════════════════════════════
+   CLASSIFIED AD (install section)
+   ═══════════════════════════════════════ */
+.classified {
+  padding: 4rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.classified__box {
+  max-width: 480px;
+  margin: 0 auto;
+  border: 2px solid var(--ink);
+  padding: 2rem 2.5rem;
+  text-align: center;
+  position: relative;
+}
+
+.classified__border-label {
+  position: absolute;
+  top: -0.55rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--paper);
+  padding: 0 0.75rem;
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.classified__title {
+  font-family: var(--serif-display);
+  font-weight: 900;
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.classified__subtitle {
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+  font-style: italic;
+}
+
+.classified__command {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0.75rem 1.5rem;
+  margin-bottom: 0.5rem;
+  text-align: left;
+  display: block;
+}
+.classified__command .comment {
+  color: rgba(250,249,246,0.4);
+}
+.classified__command .prompt {
+  color: var(--red);
+  user-select: none;
+}
+
+.classified__note {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: var(--muted);
+  margin-top: 1rem;
+  letter-spacing: 0.05em;
+}
+
+/* ═══════════════════════════════════════
+   COLOPHON / FOOTER
+   ═══════════════════════════════════════ */
+.colophon {
+  padding: 2.5rem 2rem;
+  text-align: center;
+  border-top: 3px solid var(--ink);
+}
+
+.colophon__line {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  margin-bottom: 0.35rem;
+}
+
+.colophon__inspiration {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  color: var(--rule);
+  margin-top: 0.75rem;
+  letter-spacing: 0.1em;
+}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════ */
+@media (max-width: 767px) {
+  .lead__body {
+    column-count: 1;
+  }
+
+  .evidence__grid {
+    grid-template-columns: 1fr;
+  }
+  .evidence__column:first-child {
+    border-right: none;
+    border-bottom: 1px solid rgba(250,249,246,0.15);
+    padding-bottom: 2rem;
+  }
+
+  .how-it-works__layout {
+    grid-template-columns: 1fr;
+  }
+  .how-it-works__sidebar {
+    border-left: none;
+    padding-left: 0;
+    border-top: 1px solid var(--rule);
+    padding-top: 2rem;
+  }
+
+  .content-wrap {
+    padding: 0 1.25rem;
+  }
+
+  .masthead {
+    padding: 1.5rem;
+  }
+
+  .classified__box {
+    padding: 1.5rem;
+  }
+
+  .dna-badge {
+    position: fixed;
+    top: auto;
+    bottom: 1rem;
+    right: 0.75rem;
+    font-size: 0.5rem;
+    opacity: 0.6;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .lead__body {
+    column-count: 2;
+  }
+}
+</style>
+</head>
+<body>
+
+<a href="#lead" class="skip-link">Skip to main content</a>
+
+<!-- DNA Badge -->
+<div class="dna-badge" aria-hidden="true">DNA-F-H-F-M-E</div>
+
+<!-- Hidden Nav (revealed on scroll-up) -->
+<nav class="hidden-nav" aria-label="Primary navigation">
+  <span class="hidden-nav__title">The Vibe Report</span>
+  <span class="hidden-nav__date">February 2026</span>
+</nav>
+
+<!-- ═══════════════════════════════════════
+     MASTHEAD / HERO (100vh)
+     ═══════════════════════════════════════ -->
+<header class="masthead" role="banner">
+  <div style="width:100%;max-width:960px;">
+    <hr class="masthead__rule-top">
+    <hr class="masthead__rule-top-thick">
+
+    <h1 class="masthead__nameplate">The Vibe Report</h1>
+
+    <div class="masthead__meta">
+      <span>Vol. 1, No. 1</span>
+      <span class="masthead__meta-divider" aria-hidden="true"></span>
+      <span>February 2026</span>
+      <span class="masthead__meta-divider" aria-hidden="true"></span>
+      <span>Claude Code Plugin</span>
+    </div>
+
+    <p class="masthead__headline">
+      <span class="red">BREAKING:</span> 45% of AI-Generated Code Contains Security Flaws
+    </p>
+
+    <p class="masthead__deck">
+      New tool audits and fixes vibe-coded projects in seconds
+    </p>
+  </div>
+
+  <div class="masthead__scroll-cue" aria-hidden="true">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════
+     LEAD STORY
+     ═══════════════════════════════════════ -->
+<article id="lead" class="lead reveal">
+  <div class="content-wrap">
+    <p class="lead__kicker">Investigation</p>
+    <h2 class="lead__title">The dirty secret of vibe coding: it works until it doesn't</h2>
+    <p class="lead__byline">By the Vibe Check Team &nbsp;|&nbsp; February 2026</p>
+
+    <div class="lead__body">
+      <p>Vibe coding is exploding. Cursor, Bolt, Lovable, Replit Agent&thinsp;&mdash;&thinsp;everyone builds apps by talking to AI. The results work... until they don't. Behind every polished prototype lurks a graveyard of SQL injections, missing auth checks, and hardcoded secrets sitting in plaintext.</p>
+
+      <p>The industry knows. Veracode's 2025 report found that 45% of AI-generated code ships with security vulnerabilities. CodeScene measured a 30% spike in defect risk when AI assistants enter the picture. The code looks right. It runs. It passes the demo. But it's held together with duct tape and good intentions.</p>
+
+      <aside class="lead__pullquote">
+        "Companies now pay $5&ndash;15K for manual cleanup. Vibe Check automates 80% of it."
+      </aside>
+
+      <p>An entire cottage industry has sprung up around fixing AI-generated code. Companies like SoftTeco, Redwerk, and Geniusee charge thousands per engagement. "Vibe coding cleanup specialist" is now a real job title. Humans manually reading AI output line by line, hunting for the bugs that the AI was too confident to mention.</p>
+
+      <p>Vibe Check changes the equation. One command scans your project with three parallel agents: a security auditor, an auth checker, and a secret hunter. A second command fixes everything it finds and generates tests to prove the fixes hold. No consultants. No rewrites. No waiting.</p>
+    </div>
+  </div>
+</article>
+
+<!-- ═══════════════════════════════════════
+     THE EVIDENCE (dark section)
+     ═══════════════════════════════════════ -->
+<section class="evidence reveal" aria-label="Audit results">
+  <div class="content-wrap">
+    <div class="evidence__header">
+      <p class="evidence__kicker">Exhibit A</p>
+      <h2 class="evidence__title">The Evidence</h2>
+    </div>
+
+    <div class="evidence__grid">
+      <!-- BEFORE Column -->
+      <div class="evidence__column">
+        <p class="evidence__column-label">Before</p>
+
+        <div class="score-row">
+          <span class="score-label">Security</span>
+          <span class="score-grade failing">F</span>
+          <div class="score-bar">
+            <div class="bar-fill failing" data-width="20"></div>
+          </div>
+        </div>
+        <div class="score-row">
+          <span class="score-label">Auth</span>
+          <span class="score-grade failing">D</span>
+          <div class="score-bar">
+            <div class="bar-fill failing" data-width="35"></div>
+          </div>
+        </div>
+        <div class="score-row">
+          <span class="score-label">Secrets</span>
+          <span class="score-grade failing">F</span>
+          <div class="score-bar">
+            <div class="bar-fill failing" data-width="15"></div>
+          </div>
+        </div>
+        <div class="score-row">
+          <span class="score-label">Tests</span>
+          <span class="score-grade failing">F</span>
+          <div class="score-bar">
+            <div class="bar-fill failing" data-width="5"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AFTER Column -->
+      <div class="evidence__column">
+        <p class="evidence__column-label">After</p>
+
+        <div class="score-row">
+          <span class="score-label">Security</span>
+          <span class="score-grade passing">A</span>
+          <div class="score-bar">
+            <div class="bar-fill passing" data-width="95"></div>
+          </div>
+        </div>
+        <div class="score-row">
+          <span class="score-label">Auth</span>
+          <span class="score-grade passing">A</span>
+          <div class="score-bar">
+            <div class="bar-fill passing" data-width="95"></div>
+          </div>
+        </div>
+        <div class="score-row">
+          <span class="score-label">Secrets</span>
+          <span class="score-grade passing">A</span>
+          <div class="score-bar">
+            <div class="bar-fill passing" data-width="98"></div>
+          </div>
+        </div>
+        <div class="score-row">
+          <span class="score-label">Tests</span>
+          <span class="score-grade passing">B</span>
+          <div class="score-bar">
+            <div class="bar-fill partial" data-width="80"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="evidence__summary">
+      <div class="evidence__summary-grade">
+        <span class="failing">F</span>
+        <span class="arrow">&rarr;</span>
+        <span class="passing">B+</span>
+      </div>
+
+      <div class="evidence__stats">
+        <div class="evidence__stat">
+          <span class="evidence__stat-number">18</span>
+          <span class="evidence__stat-label">Issues Fixed</span>
+        </div>
+        <div class="evidence__stat">
+          <span class="evidence__stat-number">33</span>
+          <span class="evidence__stat-label">Tests Generated</span>
+        </div>
+        <div class="evidence__stat">
+          <span class="evidence__stat-number">0</span>
+          <span class="evidence__stat-label">Rewrites</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     HOW IT WORKS
+     ═══════════════════════════════════════ -->
+<section class="how-it-works reveal" aria-label="How it works">
+  <div class="content-wrap">
+    <div class="how-it-works__layout">
+      <!-- Main column -->
+      <div class="how-it-works__main">
+        <p class="how-it-works__kicker">The Process</p>
+        <h2 class="how-it-works__title">Five steps from vulnerable to verified</h2>
+
+        <div class="step">
+          <span class="step__number">1</span>
+          <div class="step__content">
+            <p class="step__title">Scan</p>
+            <p class="step__desc">Run a single command. Vibe Check maps your project and identifies every file that touches security, auth, or secrets.</p>
+            <code class="step__code">/vibecheck</code>
+          </div>
+        </div>
+
+        <div class="step">
+          <span class="step__number">2</span>
+          <div class="step__content">
+            <p class="step__title">Dispatch</p>
+            <p class="step__desc">Three specialized agents launch in parallel: a security auditor traces injection vectors, an auth checker validates access control, and a secret hunter scans for exposed credentials.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <span class="step__number">3</span>
+          <div class="step__content">
+            <p class="step__title">Fix</p>
+            <p class="step__desc">Every finding gets a targeted patch. Minimum viable change. Your variable names, your file structure, your style. Untouched.</p>
+            <code class="step__code">/vibecheck --fix</code>
+          </div>
+        </div>
+
+        <div class="step">
+          <span class="step__number">4</span>
+          <div class="step__content">
+            <p class="step__title">Test</p>
+            <p class="step__desc">For each fix, a test is generated proving the vulnerability is gone. No manual QA. The receipts are automatic.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <span class="step__number">5</span>
+          <div class="step__content">
+            <p class="step__title">Report</p>
+            <p class="step__desc">A shareable report card grades your project across every category. Before and after. The full audit trail in one artifact.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <aside class="how-it-works__sidebar">
+        <p class="sidebar__title">Quick Facts</p>
+
+        <div class="sidebar__item">
+          <p class="sidebar__item-label">Platform</p>
+          <p class="sidebar__item-value">Claude Code</p>
+          <p class="sidebar__item-detail">Native plugin, runs in your terminal</p>
+        </div>
+
+        <div class="sidebar__item">
+          <p class="sidebar__item-label">Agents</p>
+          <p class="sidebar__item-value">3 Parallel</p>
+          <p class="sidebar__item-detail">Security, Auth, Secrets</p>
+        </div>
+
+        <div class="sidebar__item">
+          <p class="sidebar__item-label">Approach</p>
+          <p class="sidebar__item-value">Fix, Don't Rewrite</p>
+          <p class="sidebar__item-detail">Preserves your code's style and structure</p>
+        </div>
+
+        <div class="sidebar__item">
+          <p class="sidebar__item-label">Built With</p>
+          <p class="sidebar__item-value">Opus 4.6</p>
+          <p class="sidebar__item-detail">Hackathon, Feb 2026</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     THE VERDICT
+     ═══════════════════════════════════════ -->
+<section class="verdict reveal" aria-label="Verdict">
+  <hr class="verdict__rule">
+  <blockquote class="verdict__quote">
+    One command. Zero rewrites.<br>Your vibe survives.
+  </blockquote>
+  <p class="verdict__attribution">The Vibe Report Editorial Board</p>
+</section>
+
+<!-- ═══════════════════════════════════════
+     CLASSIFIED AD (install)
+     ═══════════════════════════════════════ -->
+<section class="classified reveal" aria-label="Installation">
+  <div class="content-wrap">
+    <div class="classified__box">
+      <span class="classified__border-label">Classified</span>
+      <h2 class="classified__title">Install Vibe Check</h2>
+      <p class="classified__subtitle">A Claude Code Plugin</p>
+
+      <code class="classified__command">
+        <span class="prompt">$ </span>/vibecheck <span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Audit only</span>
+      </code>
+      <code class="classified__command">
+        <span class="prompt">$ </span>/vibecheck --fix <span class="comment">&nbsp;# Audit + auto-fix</span>
+      </code>
+
+      <p class="classified__note">Works with any vibe-coded project. Node, Python, Go, Rust.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     COLOPHON / FOOTER
+     ═══════════════════════════════════════ -->
+<footer class="colophon" role="contentinfo">
+  <p class="colophon__line">Published by Vibe Check</p>
+  <p class="colophon__line">A Claude Code Plugin</p>
+  <p class="colophon__line">Built with Opus 4.6 Hackathon, Feb 2026</p>
+  <p class="colophon__inspiration">Inspired by: Editorial/Newspaper tradition + Bloomberg data density</p>
+</footer>
+
+<!-- ═══════════════════════════════════════
+     SCRIPTS (inline, minimal)
+     ═══════════════════════════════════════ -->
+<script>
+(function() {
+  'use strict';
+
+  // Respect reduced motion
+  var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ─── Section reveal on scroll ───
+  var reveals = document.querySelectorAll('.reveal');
+
+  if (!prefersReducedMotion && 'IntersectionObserver' in window) {
+    var revealObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+    reveals.forEach(function(el) {
+      revealObserver.observe(el);
+    });
+  } else {
+    // No animation: show everything immediately
+    reveals.forEach(function(el) {
+      el.classList.add('visible');
+    });
+  }
+
+  // ─── Score bars animate on scroll ───
+  var barFills = document.querySelectorAll('.bar-fill');
+
+  if (!prefersReducedMotion && 'IntersectionObserver' in window) {
+    var barObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          var target = entry.target;
+          var width = target.getAttribute('data-width');
+          target.style.width = width + '%';
+          barObserver.unobserve(target);
+        }
+      });
+    }, { threshold: 0.3 });
+
+    barFills.forEach(function(el) {
+      barObserver.observe(el);
+    });
+  } else {
+    barFills.forEach(function(el) {
+      el.style.width = el.getAttribute('data-width') + '%';
+    });
+  }
+
+  // ─── Hidden nav on scroll-up ───
+  var nav = document.querySelector('.hidden-nav');
+  var lastScrollY = window.scrollY;
+  var heroHeight = window.innerHeight;
+
+  window.addEventListener('scroll', function() {
+    var currentScrollY = window.scrollY;
+
+    if (currentScrollY > heroHeight) {
+      if (currentScrollY < lastScrollY) {
+        nav.classList.add('visible');
+      } else {
+        nav.classList.remove('visible');
+      }
+    } else {
+      nav.classList.remove('visible');
+    }
+
+    lastScrollY = currentScrollY;
+  }, { passive: true });
+})();
+</script>
+
+</body>
+</html>

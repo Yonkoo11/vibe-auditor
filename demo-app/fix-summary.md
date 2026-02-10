@@ -117,3 +117,44 @@ All fixes applied to the demo-app to resolve the 53 findings from vibecheck.json
 | POST /api/orders (no auth) | 401 Unauthorized | Pass |
 | POST /api/auth/login (bcrypt) | Token with exp claim | Pass |
 | GET /api/fetch-image | 404 Not Found | Pass |
+
+---
+
+## Second Pass Fixes
+
+### 1. Remove fallback JWT secret (app.js)
+- Removed `|| 'fallback-dev-secret'` from JWT_SECRET assignment
+- App now throws at startup if `JWT_SECRET` env var is missing
+- Prevents running production with a guessable default secret
+
+### 2. URL-encode search query (public/index.html)
+- Changed `fetch(\`/api/products/search?q=${query}\`)` to use `encodeURIComponent(query)`
+- Prevents special characters in search input from breaking the URL or being interpreted as query params
+
+### 3. Validate admin product creation (app.js)
+- `name` must be a non-empty string
+- `price` must be a positive number (> 0)
+- `stock` must be a non-negative integer (if provided)
+- Returns 400 with descriptive error on invalid input
+
+### 4. Validate admin role change (app.js)
+- `role` must be exactly `'user'` or `'admin'`
+- Rejects arbitrary role values like `'superadmin'` with 400
+
+### 5. Restrict user profile access (app.js)
+- GET /api/users/:id now checks `req.user.id === parseInt(req.params.id)` or admin role
+- Non-admin users can only view their own profile
+- Returns 403 Forbidden for unauthorized access
+
+### 6. Review comment length limit (app.js)
+- Comment must be a non-empty string
+- Maximum 1000 characters
+- Returns 400 with descriptive error on invalid input
+
+### 7. Tests added (tests/second-pass.test.js)
+- 17 new tests covering all second-pass fixes
+- Admin product creation: empty name, missing name, negative price, zero price, negative stock, valid product
+- Admin role change: invalid role, empty role, valid "user", valid "admin"
+- User profile access: cross-user forbidden, self-access allowed, admin access allowed
+- Review comments: empty, missing, over 1000 chars, exactly 1000 chars (boundary)
+- All 50 tests passing (33 first-pass + 17 second-pass)

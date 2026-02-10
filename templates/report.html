@@ -4,222 +4,1399 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vibe Check Report - VibeShop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  /* ======================== RESET ======================== */
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  /* ======================== TOKENS ======================== */
   :root {
-    --bg: #0f1117; --surface: #1a1d27; --surface2: #242836; --border: #2e3347;
-    --text: #e2e8f0; --muted: #8892a8; --mono: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
-    --green: #22c55e; --blue: #3b82f6; --yellow: #eab308; --orange: #f97316; --red: #ef4444;
+    --bg: #0c0c14;
+    --bg-elevated: #10101c;
+    --surface: rgba(22, 22, 37, 0.7);
+    --surface-solid: #161625;
+    --surface-raised: rgba(28, 28, 48, 0.8);
+    --primary: #00e5a0;
+    --primary-dim: rgba(0, 229, 160, 0.15);
+    --secondary: #ff6b35;
+    --secondary-dim: rgba(255, 107, 53, 0.15);
+    --tertiary: #7c5cfc;
+    --tertiary-dim: rgba(124, 92, 252, 0.15);
+    --quaternary: #00b4d8;
+    --quaternary-dim: rgba(0, 180, 216, 0.15);
+    --text: #f0f0f5;
+    --text-secondary: #b0b0c8;
+    --muted: #6b6b8a;
+    --border: rgba(255,255,255,0.06);
+    --border-hover: rgba(255,255,255,0.12);
+    --glass-bg: rgba(16, 16, 28, 0.65);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --green: #22c55e;
+    --blue: #3b82f6;
+    --yellow: #eab308;
+    --orange: #f97316;
+    --red: #ef4444;
+
+    --font-display: 'Space Grotesk', system-ui, sans-serif;
+    --font-body: 'DM Sans', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', 'SF Mono', 'Cascadia Code', monospace;
+
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
-  body { background: var(--bg); color: var(--text); font-family: -apple-system, 'Segoe UI', sans-serif; line-height: 1.6; padding: 2rem 1rem; }
-  .container { max-width: 720px; margin: 0 auto; }
 
-  /* Header */
-  header { text-align: center; margin-bottom: 2.5rem; }
-  header h1 { font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--muted); font-weight: 500; }
-  header .project { font-size: 2rem; font-weight: 700; margin: 0.25rem 0 0.5rem; }
-  header .date { color: var(--muted); font-size: 0.85rem; }
+  /* ======================== BASE ======================== */
+  html {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
 
-  /* Grade Hero */
-  .grade-hero { text-align: center; padding: 2.5rem 1rem; background: var(--surface); border-radius: 16px; border: 1px solid var(--border); margin-bottom: 2rem; }
-  .grade-transition { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1rem; }
-  .grade-old { font-size: 3rem; font-weight: 800; opacity: 0.35; }
-  .grade-arrow { font-size: 1.5rem; color: var(--muted); }
-  .grade-new { font-size: 5.5rem; font-weight: 900; line-height: 1; animation: gradeReveal 0.6s ease-out; }
-  @keyframes gradeReveal { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-  .grade-summary { color: var(--muted); font-size: 0.95rem; }
-  .grade-summary strong { color: var(--text); }
+  body {
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
 
-  /* Categories */
-  .categories { display: grid; gap: 0.75rem; margin-bottom: 2rem; }
-  .cat { display: grid; grid-template-columns: 1fr auto 60px; align-items: center; gap: 1rem; padding: 1rem 1.25rem; background: var(--surface); border-radius: 10px; border: 1px solid var(--border); }
-  .cat-info h3 { font-size: 0.95rem; font-weight: 600; }
-  .cat-info .weight { font-size: 0.75rem; color: var(--muted); }
-  .cat-bar { width: 120px; height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
-  .cat-bar-fill { height: 100%; border-radius: 3px; animation: barFill 1s ease-out forwards; transform-origin: left; }
-  @keyframes barFill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-  .cat-grade { font-size: 1.25rem; font-weight: 800; text-align: right; min-width: 40px; }
-  .cat-detail { font-size: 0.8rem; color: var(--muted); text-align: right; white-space: nowrap; }
+  /* ======================== SCROLL PROGRESS ======================== */
+  .scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--red), var(--orange), var(--yellow), var(--green));
+    z-index: 1000;
+    transition: width 0.1s linear;
+    box-shadow: 0 0 12px rgba(0, 229, 160, 0.3);
+  }
 
-  /* Findings */
-  .findings-section { margin-bottom: 2rem; }
-  .findings-section h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
-  .sev-group { margin-bottom: 1.5rem; }
-  .sev-label { display: inline-block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; padding: 0.2rem 0.6rem; border-radius: 4px; margin-bottom: 0.75rem; }
-  .sev-critical { background: rgba(239,68,68,0.15); color: var(--red); }
-  .sev-high { background: rgba(249,115,22,0.15); color: var(--orange); }
-  .sev-medium { background: rgba(234,179,8,0.15); color: var(--yellow); }
-  .sev-low { background: rgba(59,130,246,0.15); color: var(--blue); }
+  /* ======================== ATMOSPHERIC BACKGROUND ======================== */
+  .atmosphere {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
 
-  .finding { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 0.5rem; }
-  .finding-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.75rem; margin-bottom: 0.4rem; }
-  .finding-id { font-family: var(--mono); font-size: 0.8rem; color: var(--muted); }
-  .finding-title { font-weight: 600; font-size: 0.95rem; }
-  .finding-loc { font-family: var(--mono); font-size: 0.8rem; color: var(--muted); }
-  .finding-desc { font-size: 0.85rem; color: var(--muted); margin-bottom: 0.5rem; }
-  .badge-fixed { font-size: 0.7rem; font-weight: 600; padding: 0.15rem 0.5rem; border-radius: 4px; background: rgba(34,197,94,0.15); color: var(--green); white-space: nowrap; }
-  .badge-open { font-size: 0.7rem; font-weight: 600; padding: 0.15rem 0.5rem; border-radius: 4px; background: rgba(239,68,68,0.15); color: var(--red); white-space: nowrap; }
+  .atmosphere::before {
+    content: '';
+    position: absolute;
+    bottom: -20%;
+    left: -10%;
+    width: 70%;
+    height: 70%;
+    background: radial-gradient(ellipse at center, rgba(0, 229, 160, 0.08) 0%, rgba(0, 180, 216, 0.04) 40%, transparent 70%);
+    filter: blur(80px);
+  }
 
-  pre.snippet { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 0.75rem 1rem; font-family: var(--mono); font-size: 0.78rem; overflow-x: auto; color: var(--muted); line-height: 1.5; margin-top: 0.5rem; }
+  .atmosphere::after {
+    content: '';
+    position: absolute;
+    top: -15%;
+    right: -10%;
+    width: 60%;
+    height: 60%;
+    background: radial-gradient(ellipse at center, rgba(124, 92, 252, 0.07) 0%, rgba(124, 92, 252, 0.03) 40%, transparent 70%);
+    filter: blur(80px);
+  }
 
-  /* Footer */
-  footer { text-align: center; padding-top: 1.5rem; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.8rem; }
-  footer a { color: var(--blue); text-decoration: none; }
+  .dot-grid {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 20%, transparent 70%);
+    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 20%, transparent 70%);
+  }
 
-  /* Grade colors */
-  .g-a { color: var(--green); } .g-b { color: var(--blue); } .g-c { color: var(--yellow); }
-  .g-d { color: var(--orange); } .g-f { color: var(--red); }
+  .noise-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 256px 256px;
+  }
+
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(100px);
+  }
+
+  .orb-1 {
+    width: 500px;
+    height: 500px;
+    top: 10%;
+    left: 15%;
+    background: radial-gradient(circle, rgba(0, 229, 160, 0.05) 0%, transparent 70%);
+    animation: orbFloat1 25s ease-in-out infinite;
+  }
+
+  .orb-2 {
+    width: 400px;
+    height: 400px;
+    top: 55%;
+    right: 5%;
+    background: radial-gradient(circle, rgba(124, 92, 252, 0.04) 0%, transparent 70%);
+    animation: orbFloat2 30s ease-in-out infinite;
+  }
+
+  @keyframes orbFloat1 {
+    0%, 100% { transform: translate(0, 0); }
+    25% { transform: translate(40px, -30px); }
+    50% { transform: translate(-20px, 50px); }
+    75% { transform: translate(30px, 20px); }
+  }
+
+  @keyframes orbFloat2 {
+    0%, 100% { transform: translate(0, 0); }
+    25% { transform: translate(-50px, 30px); }
+    50% { transform: translate(30px, -40px); }
+    75% { transform: translate(-20px, -20px); }
+  }
+
+  /* ======================== CONTENT LAYER ======================== */
+  .content-layer {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 1.25rem 3rem;
+  }
+
+  /* ======================== FOCUS STATES ======================== */
+  :focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* ======================== HEADER ======================== */
+  .report-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    padding-top: 0.5rem;
+  }
+
+  .report-brand {
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .report-brand-accent {
+    color: var(--primary);
+  }
+
+  .report-project {
+    font-family: var(--font-display);
+    font-size: 2.25rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+  }
+
+  .report-date {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+  }
+
+  /* ======================== GRADE HERO ======================== */
+  .grade-hero {
+    position: relative;
+    text-align: center;
+    padding: 2.5rem 2rem 2rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    box-shadow: 0 4px 60px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+
+  /* Animated gradient border for hero */
+  .grade-hero::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 20px;
+    padding: 1.5px;
+    background: conic-gradient(from var(--border-angle, 0deg), rgba(0,229,160,0.4), rgba(0,180,216,0.2), rgba(124,92,252,0.3), rgba(240,192,64,0.15), rgba(0,229,160,0.4));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    animation: borderRotate 8s linear infinite;
+  }
+
+  @property --border-angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+  }
+
+  @keyframes borderRotate {
+    to { --border-angle: 360deg; }
+  }
+
+  /* Inner ambient glow */
+  .grade-hero::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 50%;
+    background: radial-gradient(ellipse at top left, rgba(0, 229, 160, 0.04), transparent 70%);
+    pointer-events: none;
+  }
+
+  /* Bloom behind grade hero */
+  .grade-hero-bloom {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(0, 229, 160, 0.06) 0%, rgba(124, 92, 252, 0.03) 50%, transparent 70%);
+    filter: blur(60px);
+    pointer-events: none;
+    animation: bloomPulse 4s ease-in-out infinite;
+  }
+
+  @keyframes bloomPulse {
+    0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+    50% { opacity: 1; transform: translate(-50%, -50%) scale(1.06); }
+  }
+
+  /* Success pulse behind the new grade */
+  .grade-success-pulse {
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    top: 22%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background: radial-gradient(circle, rgba(0, 229, 160, 0.12) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  .grade-success-pulse.active {
+    animation: successPulse 1.2s var(--ease) forwards;
+  }
+
+  @keyframes successPulse {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 0.8; }
+    100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; }
+  }
+
+  /* Arc gauge */
+  .arc-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0.75rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .arc-svg {
+    width: 260px;
+    height: 140px;
+    filter: drop-shadow(0 0 12px rgba(0, 229, 160, 0.15));
+  }
+
+  .arc-track {
+    fill: none;
+    stroke: rgba(255,255,255,0.04);
+    stroke-width: 10;
+    stroke-linecap: round;
+  }
+
+  .arc-fill {
+    fill: none;
+    stroke: url(#arcGradient);
+    stroke-width: 10;
+    stroke-linecap: round;
+    stroke-dasharray: 251;
+    stroke-dashoffset: 251;
+    transition: stroke-dashoffset 2.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    filter: drop-shadow(0 0 8px rgba(0, 229, 160, 0.35));
+  }
+
+  .arc-fill.animated {
+    stroke-dashoffset: 50;
+  }
+
+  .arc-glow {
+    fill: none;
+    stroke: url(#arcGradient);
+    stroke-width: 20;
+    stroke-linecap: round;
+    stroke-dasharray: 251;
+    stroke-dashoffset: 251;
+    opacity: 0.12;
+    filter: blur(8px);
+    transition: stroke-dashoffset 2.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .arc-glow.animated {
+    stroke-dashoffset: 50;
+  }
+
+  /* Grade transition */
+  .grade-transition {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .grade-block {
+    text-align: center;
+  }
+
+  .grade-old {
+    font-family: var(--font-display);
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    color: var(--secondary);
+    text-shadow: 0 0 40px rgba(255, 107, 53, 0.3);
+    text-decoration: line-through;
+    text-decoration-color: rgba(255, 107, 53, 0.35);
+    text-decoration-thickness: 2px;
+    opacity: 0.5;
+    transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+  }
+
+  .grade-old.dimmed {
+    opacity: 0.25;
+    transform: scale(0.92);
+  }
+
+  .grade-label {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+
+  .grade-arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .grade-arrow svg {
+    width: 36px;
+    height: 18px;
+    color: var(--primary);
+    opacity: 0;
+    animation: arrowPulse 2s var(--ease) infinite;
+  }
+
+  .grade-arrow svg:nth-child(2) { animation-delay: 0.15s; }
+  .grade-arrow svg:nth-child(3) { animation-delay: 0.3s; }
+
+  @keyframes arrowPulse {
+    0%, 100% { opacity: 0.12; }
+    50% { opacity: 0.7; }
+  }
+
+  .grade-new {
+    font-family: var(--font-display);
+    font-size: 5.5rem;
+    font-weight: 700;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    background: linear-gradient(135deg, var(--primary), var(--quaternary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 40px rgba(0, 229, 160, 0.4));
+    opacity: 0;
+    transform: scale(0.7);
+    transition: opacity 0.8s var(--ease), transform 0.8s var(--ease-spring);
+  }
+
+  .grade-new.revealed {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* Stats row */
+  .grade-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .grade-stat {
+    text-align: center;
+    padding: 1rem 0.5rem;
+    background: rgba(255,255,255,0.025);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    transition: border-color 0.3s var(--ease), background-color 0.3s var(--ease);
+  }
+
+  .grade-stat:hover {
+    border-color: var(--border-hover);
+    background: rgba(255,255,255,0.04);
+  }
+
+  .grade-stat-num {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.5rem;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.2;
+  }
+
+  .grade-stat-num.clr-found { color: var(--secondary); }
+  .grade-stat-num.clr-fixed { color: var(--primary); }
+  .grade-stat-num.clr-open { color: var(--yellow); }
+
+  .grade-stat-label {
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  /* ======================== CATEGORIES ======================== */
+  .categories-section {
+    margin-bottom: 1.5rem;
+  }
+
+  .section-heading {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 1rem;
+    color: var(--text);
+    position: relative;
+    z-index: 1;
+  }
+
+  .categories {
+    display: grid;
+    gap: 0.625rem;
+  }
+
+  .cat {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.5s var(--ease), transform 0.5s var(--ease),
+                border-color 0.3s var(--ease), box-shadow 0.3s var(--ease);
+  }
+
+  .cat:hover {
+    border-color: var(--border-hover);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 4px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .cat.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .cat-info h3 {
+    font-family: var(--font-display);
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+
+  .cat-weight {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+  }
+
+  .cat-middle {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .cat-bar-wrap {
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .cat-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 1.2s var(--ease);
+  }
+
+  .cat-bar-fill.animated {
+    transform: scaleX(1);
+  }
+
+  /* Grade-colored fills */
+  .cat-bar-fill.fill-green { background: linear-gradient(90deg, rgba(34, 197, 94, 0.6), var(--green)); }
+  .cat-bar-fill.fill-blue  { background: linear-gradient(90deg, rgba(59, 130, 246, 0.6), var(--blue)); }
+  .cat-bar-fill.fill-yellow { background: linear-gradient(90deg, rgba(234, 179, 8, 0.6), var(--yellow)); }
+  .cat-bar-fill.fill-muted { background: rgba(107, 107, 138, 0.3); }
+
+  .cat-detail {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .cat-grade-wrap {
+    text-align: right;
+    min-width: 48px;
+  }
+
+  .cat-grade {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Grade color classes */
+  .g-a { color: var(--green); }
+  .g-b { color: var(--blue); }
+  .g-c { color: var(--yellow); }
+  .g-d { color: var(--orange); }
+  .g-f { color: var(--red); }
+  .g-na { color: var(--muted); }
+
+  /* ======================== FINDINGS ======================== */
+  .findings-section {
+    margin-bottom: 2rem;
+  }
+
+  .sev-group {
+    margin-bottom: 1.25rem;
+  }
+
+  .sev-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    padding: 0.65rem 1rem;
+    border-radius: 10px;
+    background: var(--sev-bg, rgba(255,255,255,0.02));
+    border-left: 3px solid var(--sev-color, var(--muted));
+  }
+
+  .sev-header-critical {
+    --sev-color: var(--red);
+    --sev-bg: rgba(239, 68, 68, 0.06);
+  }
+
+  .sev-header-high {
+    --sev-color: var(--orange);
+    --sev-bg: rgba(249, 115, 22, 0.06);
+  }
+
+  .sev-header-medium {
+    --sev-color: var(--yellow);
+    --sev-bg: rgba(234, 179, 8, 0.05);
+  }
+
+  .sev-header-low {
+    --sev-color: var(--blue);
+    --sev-bg: rgba(59, 130, 246, 0.05);
+  }
+
+  .sev-label {
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--sev-color);
+  }
+
+  .sev-count {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Finding cards */
+  .finding {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-left: 3px solid var(--finding-sev-color, var(--muted));
+    border-radius: 12px;
+    padding: 1.1rem 1.25rem;
+    margin-bottom: 0.625rem;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.5s var(--ease), transform 0.5s var(--ease),
+                border-color 0.3s var(--ease), box-shadow 0.3s var(--ease);
+  }
+
+  .finding.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .finding:hover {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 4px 24px rgba(0, 0, 0, 0.15);
+  }
+
+  .finding-critical { --finding-sev-color: var(--red); }
+  .finding-high { --finding-sev-color: var(--orange); }
+  .finding-medium { --finding-sev-color: var(--yellow); }
+  .finding-low { --finding-sev-color: var(--blue); }
+
+  /* Critical: ambient red glow */
+  .finding-critical {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 0 30px rgba(239, 68, 68, 0.04);
+  }
+
+  /* Fixed findings: subtle green tint */
+  .finding-fixed {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.02), var(--glass-bg) 30%);
+  }
+
+  .finding-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .finding-id {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--muted);
+    margin-right: 0.5rem;
+  }
+
+  .finding-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.92rem;
+    color: var(--text);
+  }
+
+  .finding-loc {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--quaternary);
+    margin-bottom: 0.3rem;
+    opacity: 0.85;
+  }
+
+  .finding-desc {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.55;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Badges */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 0.25rem 0.65rem;
+    border-radius: 6px;
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+    min-height: 26px;
+  }
+
+  .badge-fixed {
+    background: rgba(34, 197, 94, 0.12);
+    color: var(--green);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+  }
+
+  .badge-fixed svg {
+    width: 12px;
+    height: 12px;
+    flex-shrink: 0;
+  }
+
+  .badge-open {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--red);
+    border: 1px solid rgba(239, 68, 68, 0.18);
+  }
+
+  /* Code snippets */
+  pre.snippet {
+    background: rgba(8, 8, 15, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 8px;
+    padding: 0.85rem 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    overflow-x: auto;
+    color: var(--muted);
+    line-height: 1.65;
+    margin-top: 0.6rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .snippet .line-removed {
+    color: rgba(255, 107, 53, 0.75);
+    text-decoration: line-through;
+    text-decoration-color: rgba(255, 107, 53, 0.3);
+  }
+
+  .snippet .line-added {
+    color: rgba(0, 229, 160, 0.9);
+  }
+
+  .snippet .line-comment {
+    color: var(--muted);
+    opacity: 0.7;
+  }
+
+  /* ======================== FOOTER ======================== */
+  .report-footer {
+    text-align: center;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.78rem;
+    line-height: 1.7;
+  }
+
+  .report-footer a {
+    color: var(--primary);
+    text-decoration: none;
+    transition: color 0.25s var(--ease);
+  }
+
+  .report-footer a:hover {
+    color: var(--quaternary);
+  }
+
+  .report-footer-time {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-variant-numeric: tabular-nums;
+    margin-top: 0.25rem;
+    opacity: 0.7;
+  }
+
+  /* ======================== REDUCED MOTION ======================== */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+    .grade-new { opacity: 1; transform: none; }
+    .grade-old { opacity: 0.25; }
+    .arc-fill, .arc-glow {
+      stroke-dashoffset: 50;
+      transition: none;
+    }
+    .cat { opacity: 1; transform: none; }
+    .cat-bar-fill { transform: scaleX(1); }
+    .finding { opacity: 1; transform: none; }
+    .orb { animation: none; }
+    .grade-hero-bloom { animation: none; }
+    .scroll-progress { transition: none; }
+    .grade-success-pulse { display: none; }
+  }
+
+  /* ======================== RESPONSIVE: SMALL ======================== */
+  @media (max-width: 640px) {
+    .content-layer {
+      padding: 1.25rem 1rem 2rem;
+    }
+
+    .report-project {
+      font-size: 1.75rem;
+    }
+
+    .grade-hero {
+      padding: 2rem 1.25rem 1.75rem;
+    }
+
+    .arc-svg {
+      width: 200px;
+      height: 110px;
+    }
+
+    .grade-old {
+      font-size: 2.75rem;
+    }
+
+    .grade-new {
+      font-size: 4rem;
+    }
+
+    .grade-transition {
+      gap: 1.25rem;
+    }
+
+    .grade-stats {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+    }
+
+    .grade-stat {
+      padding: 0.75rem 0.25rem;
+    }
+
+    .grade-stat-num {
+      font-size: 1.2rem;
+    }
+
+    .cat {
+      grid-template-columns: 1fr auto;
+      gap: 0.75rem;
+    }
+
+    .cat-middle {
+      display: none;
+    }
+
+    .finding-header {
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+  }
+
+  /* ======================== RESPONSIVE: WIDE ======================== */
+  @media (min-width: 1200px) {
+    .content-layer {
+      max-width: 880px;
+    }
+  }
 </style>
 </head>
 <body>
-<div class="container">
 
-  <header>
-    <h1>Vibe Check Report</h1>
-    <div class="project">VibeShop</div>
-    <div class="date">February 9, 2026</div>
-  </header>
+  <!-- Scroll progress bar -->
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
 
-  <section class="grade-hero">
-    <div class="grade-transition">
-      <span class="grade-old g-f">F</span>
-      <span class="grade-arrow">&rarr;</span>
-      <span class="grade-new g-b">B+</span>
-    </div>
-    <div class="grade-summary">
-      <strong>53 issues</strong> found &middot; <strong>14 fixed</strong> &middot; <strong>5 remaining</strong>
-    </div>
-  </section>
+  <!-- Atmospheric background -->
+  <div class="atmosphere" aria-hidden="true"></div>
+  <div class="dot-grid" aria-hidden="true"></div>
+  <div class="noise-overlay" aria-hidden="true"></div>
+  <div class="orb orb-1" aria-hidden="true"></div>
+  <div class="orb orb-2" aria-hidden="true"></div>
 
-  <section class="categories">
-    <div class="cat">
-      <div class="cat-info"><h3>Security</h3><span class="weight">30% weight</span></div>
-      <div><div class="cat-bar"><div class="cat-bar-fill" style="width:95%;background:var(--green)"></div></div>
-      <div class="cat-detail">F &rarr; A &middot; 5 fixed</div></div>
-      <div class="cat-grade g-a">A</div>
-    </div>
-    <div class="cat">
-      <div class="cat-info"><h3>Auth</h3><span class="weight">25% weight</span></div>
-      <div><div class="cat-bar"><div class="cat-bar-fill" style="width:92%;background:var(--green)"></div></div>
-      <div class="cat-detail">D &rarr; A &middot; 2 fixed</div></div>
-      <div class="cat-grade g-a">A</div>
-    </div>
-    <div class="cat">
-      <div class="cat-info"><h3>Secrets</h3><span class="weight">15% weight</span></div>
-      <div><div class="cat-bar"><div class="cat-bar-fill" style="width:95%;background:var(--green)"></div></div>
-      <div class="cat-detail">F &rarr; A &middot; 1 fixed</div></div>
-      <div class="cat-grade g-a">A</div>
-    </div>
-    <div class="cat">
-      <div class="cat-info"><h3>Tests</h3><span class="weight">15% weight</span></div>
-      <div><div class="cat-bar"><div class="cat-bar-fill" style="width:80%;background:var(--blue)"></div></div>
-      <div class="cat-detail">F &rarr; B &middot; 33 tests</div></div>
-      <div class="cat-grade g-b">B</div>
-    </div>
-    <div class="cat">
-      <div class="cat-info"><h3>Performance</h3><span class="weight">10% weight</span></div>
-      <div><div class="cat-bar"><div class="cat-bar-fill" style="width:85%;background:var(--blue)"></div></div>
-      <div class="cat-detail">C &rarr; B+ &middot; 0 issues</div></div>
-      <div class="cat-grade g-b">B+</div>
-    </div>
-    <div class="cat">
-      <div class="cat-info"><h3>Accessibility</h3><span class="weight">5% weight</span></div>
-      <div><div class="cat-bar"><div class="cat-bar-fill" style="width:0%;background:var(--muted)"></div></div>
-      <div class="cat-detail">Not scanned</div></div>
-      <div class="cat-grade" style="color:var(--muted)">N/A</div>
-    </div>
-  </section>
+  <!-- Content -->
+  <div class="content-layer">
 
-  <section class="findings-section">
-    <h2>Findings</h2>
+    <!-- Header -->
+    <header class="report-header">
+      <div class="report-brand">VIBE <span class="report-brand-accent">CHECK</span> REPORT</div>
+      <h1 class="report-project">VibeShop</h1>
+      <time class="report-date" datetime="2026-02-09">February 9, 2026</time>
+    </header>
 
-    <div class="sev-group">
-      <div class="sev-label sev-critical">Critical</div>
+    <!-- Grade Hero -->
+    <section class="grade-hero" aria-label="Overall score">
+      <div class="grade-hero-bloom" aria-hidden="true"></div>
+      <div class="grade-success-pulse" id="successPulse" aria-hidden="true"></div>
 
-      <div class="finding">
-        <div class="finding-header">
-          <div><span class="finding-id">SEC-001</span> <span class="finding-title">SQL Injection in search endpoint</span></div>
-          <span class="badge-fixed">Fixed</span>
-        </div>
-        <div class="finding-loc">app.js:45</div>
-        <div class="finding-desc">User input passed directly into SQL query string without parameterization. Allows full database read/write/delete.</div>
-        <pre class="snippet">// Before
-db.all(`SELECT * FROM products WHERE name LIKE '%${req.query.q}%'`);
-
-// After
-db.all(`SELECT * FROM products WHERE name LIKE ?`, [`%${req.query.q}%`]);</pre>
+      <!-- Arc gauge -->
+      <div class="arc-container">
+        <svg class="arc-svg" viewBox="0 0 260 140" aria-hidden="true">
+          <defs>
+            <linearGradient id="arcGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#ff6b35"/>
+              <stop offset="35%" stop-color="#eab308"/>
+              <stop offset="100%" stop-color="#00e5a0"/>
+            </linearGradient>
+          </defs>
+          <path class="arc-track" d="M 25 125 A 105 105 0 0 1 235 125"/>
+          <path class="arc-glow" d="M 25 125 A 105 105 0 0 1 235 125"/>
+          <path class="arc-fill" d="M 25 125 A 105 105 0 0 1 235 125"/>
+        </svg>
       </div>
 
-      <div class="finding">
-        <div class="finding-header">
-          <div><span class="finding-id">SEC-002</span> <span class="finding-title">Stored XSS in review display</span></div>
-          <span class="badge-fixed">Fixed</span>
+      <!-- Grade transition: F -> B+ -->
+      <div class="grade-transition">
+        <div class="grade-block">
+          <div class="grade-old" id="gradeFrom">F</div>
+          <div class="grade-label">Before</div>
         </div>
-        <div class="finding-loc">public/index.html:87</div>
-        <div class="finding-desc">Review text rendered with innerHTML, allowing script injection via crafted review content.</div>
-        <pre class="snippet">// Before
-reviewDiv.innerHTML = review.text;
-
-// After
-reviewDiv.textContent = review.text;</pre>
+        <div class="grade-arrow" aria-hidden="true">
+          <svg viewBox="0 0 36 18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3l8 6-8 6"/></svg>
+          <svg viewBox="0 0 36 18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3l8 6-8 6"/></svg>
+          <svg viewBox="0 0 36 18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3l8 6-8 6"/></svg>
+        </div>
+        <div class="grade-block">
+          <div class="grade-new" id="gradeTo">B+</div>
+          <div class="grade-label">After</div>
+        </div>
       </div>
 
-      <div class="finding">
-        <div class="finding-header">
-          <div><span class="finding-id">AUTH-001</span> <span class="finding-title">Missing authentication on admin routes</span></div>
-          <span class="badge-fixed">Fixed</span>
+      <!-- Stats -->
+      <div class="grade-stats">
+        <div class="grade-stat">
+          <div class="grade-stat-num clr-found" id="statFound">0</div>
+          <div class="grade-stat-label">issues found</div>
         </div>
-        <div class="finding-loc">app.js:120</div>
-        <div class="finding-desc">Admin endpoints for user management and order deletion accessible without any authentication check.</div>
+        <div class="grade-stat">
+          <div class="grade-stat-num clr-fixed" id="statFixed">0</div>
+          <div class="grade-stat-label">auto-fixed</div>
+        </div>
+        <div class="grade-stat">
+          <div class="grade-stat-num clr-open" id="statOpen">0</div>
+          <div class="grade-stat-label">remaining</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Category Breakdown -->
+    <section class="categories-section" aria-label="Category breakdown">
+      <h2 class="section-heading">Category Breakdown</h2>
+      <div class="categories">
+
+        <div class="cat" data-delay="0">
+          <div class="cat-info">
+            <h3>Security</h3>
+            <span class="cat-weight">30% weight</span>
+          </div>
+          <div class="cat-middle">
+            <div class="cat-bar-wrap"><div class="cat-bar-fill fill-green" style="width:95%"></div></div>
+            <div class="cat-detail">F &rarr; A &middot; 5 fixed</div>
+          </div>
+          <div class="cat-grade-wrap">
+            <div class="cat-grade g-a">A</div>
+          </div>
+        </div>
+
+        <div class="cat" data-delay="80">
+          <div class="cat-info">
+            <h3>Auth</h3>
+            <span class="cat-weight">25% weight</span>
+          </div>
+          <div class="cat-middle">
+            <div class="cat-bar-wrap"><div class="cat-bar-fill fill-green" style="width:92%"></div></div>
+            <div class="cat-detail">D &rarr; A &middot; 2 fixed</div>
+          </div>
+          <div class="cat-grade-wrap">
+            <div class="cat-grade g-a">A</div>
+          </div>
+        </div>
+
+        <div class="cat" data-delay="160">
+          <div class="cat-info">
+            <h3>Secrets</h3>
+            <span class="cat-weight">15% weight</span>
+          </div>
+          <div class="cat-middle">
+            <div class="cat-bar-wrap"><div class="cat-bar-fill fill-green" style="width:95%"></div></div>
+            <div class="cat-detail">F &rarr; A &middot; 1 fixed</div>
+          </div>
+          <div class="cat-grade-wrap">
+            <div class="cat-grade g-a">A</div>
+          </div>
+        </div>
+
+        <div class="cat" data-delay="240">
+          <div class="cat-info">
+            <h3>Tests</h3>
+            <span class="cat-weight">15% weight</span>
+          </div>
+          <div class="cat-middle">
+            <div class="cat-bar-wrap"><div class="cat-bar-fill fill-blue" style="width:80%"></div></div>
+            <div class="cat-detail">F &rarr; B &middot; 33 tests</div>
+          </div>
+          <div class="cat-grade-wrap">
+            <div class="cat-grade g-b">B</div>
+          </div>
+        </div>
+
+        <div class="cat" data-delay="320">
+          <div class="cat-info">
+            <h3>Performance</h3>
+            <span class="cat-weight">10% weight</span>
+          </div>
+          <div class="cat-middle">
+            <div class="cat-bar-wrap"><div class="cat-bar-fill fill-blue" style="width:85%"></div></div>
+            <div class="cat-detail">C &rarr; B+ &middot; 0 issues</div>
+          </div>
+          <div class="cat-grade-wrap">
+            <div class="cat-grade g-b">B+</div>
+          </div>
+        </div>
+
+        <div class="cat" data-delay="400">
+          <div class="cat-info">
+            <h3>Accessibility</h3>
+            <span class="cat-weight">5% weight</span>
+          </div>
+          <div class="cat-middle">
+            <div class="cat-bar-wrap"><div class="cat-bar-fill fill-muted" style="width:0%"></div></div>
+            <div class="cat-detail">Not scanned</div>
+          </div>
+          <div class="cat-grade-wrap">
+            <div class="cat-grade g-na">N/A</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Findings -->
+    <section class="findings-section" aria-label="Detailed findings">
+      <h2 class="section-heading">Findings</h2>
+
+      <!-- Critical -->
+      <div class="sev-group">
+        <div class="sev-header sev-header-critical">
+          <span class="sev-label">Critical</span>
+          <span class="sev-count">4 findings</span>
+        </div>
+
+        <article class="finding finding-critical finding-fixed">
+          <div class="finding-header">
+            <div>
+              <span class="finding-id">SEC-001</span>
+              <span class="finding-title">SQL Injection in search endpoint</span>
+            </div>
+            <span class="badge badge-fixed">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 8.5l3 3 7-7"/></svg>
+              Fixed
+            </span>
+          </div>
+          <div class="finding-loc">app.js:45</div>
+          <div class="finding-desc">User input passed directly into SQL query string without parameterization. Allows full database read/write/delete.</div>
+          <pre class="snippet"><span class="line-comment">// Before</span>
+<span class="line-removed">db.all(`SELECT * FROM products WHERE name LIKE '%${req.query.q}%'`);</span>
+
+<span class="line-comment">// After</span>
+<span class="line-added">db.all(`SELECT * FROM products WHERE name LIKE ?`, [`%${req.query.q}%`]);</span></pre>
+        </article>
+
+        <article class="finding finding-critical finding-fixed">
+          <div class="finding-header">
+            <div>
+              <span class="finding-id">SEC-002</span>
+              <span class="finding-title">Stored XSS in review display</span>
+            </div>
+            <span class="badge badge-fixed">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 8.5l3 3 7-7"/></svg>
+              Fixed
+            </span>
+          </div>
+          <div class="finding-loc">public/index.html:87</div>
+          <div class="finding-desc">Review text rendered with innerHTML, allowing script injection via crafted review content.</div>
+          <pre class="snippet"><span class="line-comment">// Before</span>
+<span class="line-removed">reviewDiv.innerHTML = review.text;</span>
+
+<span class="line-comment">// After</span>
+<span class="line-added">reviewDiv.textContent = review.text;</span></pre>
+        </article>
+
+        <article class="finding finding-critical finding-fixed">
+          <div class="finding-header">
+            <div>
+              <span class="finding-id">AUTH-001</span>
+              <span class="finding-title">Missing authentication on admin routes</span>
+            </div>
+            <span class="badge badge-fixed">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 8.5l3 3 7-7"/></svg>
+              Fixed
+            </span>
+          </div>
+          <div class="finding-loc">app.js:120</div>
+          <div class="finding-desc">Admin endpoints for user management and order deletion accessible without any authentication check.</div>
+        </article>
+
+        <article class="finding finding-critical finding-fixed">
+          <div class="finding-header">
+            <div>
+              <span class="finding-id">SECRET-001</span>
+              <span class="finding-title">Hardcoded JWT secret in source</span>
+            </div>
+            <span class="badge badge-fixed">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 8.5l3 3 7-7"/></svg>
+              Fixed
+            </span>
+          </div>
+          <div class="finding-loc">app.js:8</div>
+          <div class="finding-desc">JWT signing secret hardcoded as string literal. Anyone with repo access can forge auth tokens.</div>
+          <pre class="snippet"><span class="line-comment">// Before</span>
+<span class="line-removed">const JWT_SECRET = "super_secret_key_123";</span>
+
+<span class="line-comment">// After</span>
+<span class="line-added">const JWT_SECRET = process.env.JWT_SECRET;</span></pre>
+        </article>
       </div>
 
-      <div class="finding">
-        <div class="finding-header">
-          <div><span class="finding-id">SECRET-001</span> <span class="finding-title">Hardcoded JWT secret in source</span></div>
-          <span class="badge-fixed">Fixed</span>
+      <!-- High -->
+      <div class="sev-group">
+        <div class="sev-header sev-header-high">
+          <span class="sev-label">High</span>
+          <span class="sev-count">1 finding</span>
         </div>
-        <div class="finding-loc">app.js:8</div>
-        <div class="finding-desc">JWT signing secret hardcoded as string literal. Anyone with repo access can forge auth tokens.</div>
-        <pre class="snippet">// Before
-const JWT_SECRET = "super_secret_key_123";
 
-// After
-const JWT_SECRET = process.env.JWT_SECRET;</pre>
+        <article class="finding finding-high finding-fixed">
+          <div class="finding-header">
+            <div>
+              <span class="finding-id">AUTH-002</span>
+              <span class="finding-title">IDOR on order endpoints</span>
+            </div>
+            <span class="badge badge-fixed">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 8.5l3 3 7-7"/></svg>
+              Fixed
+            </span>
+          </div>
+          <div class="finding-loc">app.js:98</div>
+          <div class="finding-desc">Order lookup uses user-supplied ID without verifying ownership. Any authenticated user can view or modify other users' orders.</div>
+        </article>
       </div>
-    </div>
 
-    <div class="sev-group">
-      <div class="sev-label sev-high">High</div>
-
-      <div class="finding">
-        <div class="finding-header">
-          <div><span class="finding-id">AUTH-002</span> <span class="finding-title">IDOR on order endpoints</span></div>
-          <span class="badge-fixed">Fixed</span>
+      <!-- Medium -->
+      <div class="sev-group">
+        <div class="sev-header sev-header-medium">
+          <span class="sev-label">Medium</span>
+          <span class="sev-count">1 finding</span>
         </div>
-        <div class="finding-loc">app.js:98</div>
-        <div class="finding-desc">Order lookup uses user-supplied ID without verifying ownership. Any authenticated user can view or modify other users' orders.</div>
+
+        <article class="finding finding-medium finding-fixed">
+          <div class="finding-header">
+            <div>
+              <span class="finding-id">SEC-003</span>
+              <span class="finding-title">No rate limiting on API endpoints</span>
+            </div>
+            <span class="badge badge-fixed">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 8.5l3 3 7-7"/></svg>
+              Fixed
+            </span>
+          </div>
+          <div class="finding-loc">app.js:1</div>
+          <div class="finding-desc">No rate limiting middleware configured. Login and search endpoints vulnerable to brute-force and DoS.</div>
+        </article>
       </div>
-    </div>
+    </section>
 
-    <div class="sev-group">
-      <div class="sev-label sev-medium">Medium</div>
+    <!-- Footer -->
+    <footer class="report-footer">
+      <p>Generated by <a href="https://github.com/anthropics/claude-code">Vibe Check</a> -- a Claude Code plugin</p>
+      <p class="report-footer-time">2026-02-09 14:32:00 UTC</p>
+    </footer>
 
-      <div class="finding">
-        <div class="finding-header">
-          <div><span class="finding-id">SEC-003</span> <span class="finding-title">No rate limiting on API endpoints</span></div>
-          <span class="badge-fixed">Fixed</span>
-        </div>
-        <div class="finding-loc">app.js:1</div>
-        <div class="finding-desc">No rate limiting middleware configured. Login and search endpoints vulnerable to brute-force and DoS.</div>
-      </div>
-    </div>
-  </section>
+  </div>
 
-  <footer>
-    <p>Generated by <a href="https://github.com/anthropics/claude-code">Vibe Check</a> &mdash; a Claude Code plugin</p>
-    <p style="margin-top:0.25rem">2026-02-09 14:32:00 UTC</p>
-  </footer>
+  <script>
+    (function() {
+      'use strict';
 
-</div>
+      var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      /* ---------- Scroll progress bar ---------- */
+      function initScrollProgress() {
+        var bar = document.getElementById('scrollProgress');
+        if (!bar) return;
+        function update() {
+          var scrollTop = window.scrollY || document.documentElement.scrollTop;
+          var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+          var pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+          bar.style.width = pct + '%';
+        }
+        window.addEventListener('scroll', update, { passive: true });
+        update();
+      }
+
+      /* ---------- Counter animation ---------- */
+      function animateCounter(el, target, duration) {
+        if (!el) return;
+        if (prefersReduced) { el.textContent = target; return; }
+        var start = performance.now();
+        function tick(now) {
+          var progress = Math.min((now - start) / duration, 1);
+          var eased = 1 - Math.pow(1 - progress, 3);
+          el.textContent = Math.round(eased * target);
+          if (progress < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+      }
+
+      /* ---------- Grade hero animation ---------- */
+      function initGradeHero() {
+        var arcFill = document.querySelector('.arc-fill');
+        var arcGlow = document.querySelector('.arc-glow');
+        var gradeFrom = document.getElementById('gradeFrom');
+        var gradeTo = document.getElementById('gradeTo');
+        var pulse = document.getElementById('successPulse');
+        var statFound = document.getElementById('statFound');
+        var statFixed = document.getElementById('statFixed');
+        var statOpen = document.getElementById('statOpen');
+
+        if (prefersReduced) {
+          if (arcFill) arcFill.classList.add('animated');
+          if (arcGlow) arcGlow.classList.add('animated');
+          if (gradeFrom) gradeFrom.classList.add('dimmed');
+          if (gradeTo) gradeTo.classList.add('revealed');
+          if (statFound) statFound.textContent = '53';
+          if (statFixed) statFixed.textContent = '14';
+          if (statOpen) statOpen.textContent = '5';
+          return;
+        }
+
+        setTimeout(function() {
+          if (arcFill) arcFill.classList.add('animated');
+          if (arcGlow) arcGlow.classList.add('animated');
+          animateCounter(statFound, 53, 2000);
+          animateCounter(statFixed, 14, 2200);
+          animateCounter(statOpen, 5, 1800);
+        }, 400);
+
+        setTimeout(function() {
+          if (gradeFrom) gradeFrom.classList.add('dimmed');
+        }, 700);
+
+        setTimeout(function() {
+          if (gradeTo) gradeTo.classList.add('revealed');
+          if (pulse) pulse.classList.add('active');
+        }, 1100);
+      }
+
+      /* ---------- Category reveal + bar animations ---------- */
+      function initCategories() {
+        var cats = document.querySelectorAll('.cat');
+        if (prefersReduced) {
+          cats.forEach(function(cat) {
+            cat.classList.add('visible');
+            var bar = cat.querySelector('.cat-bar-fill');
+            if (bar) bar.classList.add('animated');
+          });
+          return;
+        }
+
+        var observer = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              var cat = entry.target;
+              var delay = parseInt(cat.getAttribute('data-delay'), 10) || 0;
+              setTimeout(function() {
+                cat.classList.add('visible');
+                var bar = cat.querySelector('.cat-bar-fill');
+                if (bar) {
+                  setTimeout(function() { bar.classList.add('animated'); }, 200);
+                }
+              }, delay);
+              observer.unobserve(cat);
+            }
+          });
+        }, { threshold: 0.15 });
+
+        cats.forEach(function(cat) { observer.observe(cat); });
+      }
+
+      /* ---------- Finding card stagger reveal ---------- */
+      function initFindings() {
+        var findings = document.querySelectorAll('.finding');
+        if (prefersReduced) {
+          findings.forEach(function(f) { f.classList.add('visible'); });
+          return;
+        }
+
+        var stagger = 0;
+        var observer = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              var f = entry.target;
+              var d = stagger;
+              stagger += 80;
+              setTimeout(function() {
+                f.classList.add('visible');
+              }, d);
+              observer.unobserve(f);
+              /* Reset stagger after a gap */
+              clearTimeout(window._findingStaggerReset);
+              window._findingStaggerReset = setTimeout(function() { stagger = 0; }, 500);
+            }
+          });
+        }, { threshold: 0.08 });
+
+        findings.forEach(function(f) { observer.observe(f); });
+      }
+
+      /* ---------- Init ---------- */
+      document.addEventListener('DOMContentLoaded', function() {
+        initScrollProgress();
+        initGradeHero();
+        initCategories();
+        initFindings();
+      });
+    })();
+  </script>
 </body>
 </html>

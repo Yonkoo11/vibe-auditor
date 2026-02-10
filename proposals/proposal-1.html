@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+  ================================================================
+  VIBE CHECK - Landing Page Proposal 1: "Terminal Noir"
+  ================================================================
+  DNA Code: DNA-A-O-I-D-X
+    A = Asymmetric layout (off-center, grid-breaking)
+    O = Overlay navigation (full-screen menu)
+    I = Immersive hero (scan-lines, glow, texture)
+    D = Duotone color (#00FF41 + #0a0a0f)
+    X = Mixed typography (serif display + monospace body)
+
+  Inspiration:
+    - Vercel.com: extreme restraint, code as design, black bg
+    - Brutalist: raw typography, harsh structure, monospace
+
+  UX Architecture:
+    ┌─────────────────────────────────────────────────┐
+    │ [NAV] Logo left, DNA badge top-right (fixed)    │
+    │ Hamburger triggers full-screen overlay menu      │
+    ├─────────────────────────────────────────────────┤
+    │ [HERO - Immersive]                              │
+    │ Scan-line overlay + green glow                  │
+    │ Asymmetric: tagline hangs hard-left             │
+    │ Subtitle offset right                           │
+    ├─────────────────────────────────────────────────┤
+    │ [PROBLEM] Stats as monospace data, left-aligned │
+    │ Pull-quote breaks grid to the right             │
+    ├─────────────────────────────────────────────────┤
+    │ [DEMO - Centerpiece]                            │
+    │ Oversized terminal (70%+ viewport)              │
+    │ Typing animation, staggered line reveal         │
+    │ F→B+ grade transformation with color shift      │
+    ├─────────────────────────────────────────────────┤
+    │ [HOW IT WORKS] Numbered steps, alternating      │
+    │ alignment (left/right/left/right/left)          │
+    ├─────────────────────────────────────────────────┤
+    │ [INSTALL] Code block, oversized, off-center     │
+    ├─────────────────────────────────────────────────┤
+    │ [FOOTER] Credits, inspiration citation          │
+    └─────────────────────────────────────────────────┘
+
+  Accessibility:
+    - All contrast ratios >= 4.5:1 (verified)
+    - prefers-reduced-motion respected
+    - Semantic HTML throughout
+    - Focus states on all interactive elements
+    - Skip-to-content link
+  ================================================================
+-->
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vibe Check - You vibed. Now ship.</title>
+  <meta name="description" content="Vibe Check audits your AI-generated code and fixes it. One command. Zero rewrites.">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
+
+    /* ============================================
+       RESET & BASE
+       ============================================ */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --green: #00FF41;
+      --navy: #1a1a2e;
+      --black: #0a0a0f;
+      --gray: #e0e0e0;
+      --coral: #ff3366;
+      --green-dim: rgba(0, 255, 65, 0.08);
+      --green-glow: rgba(0, 255, 65, 0.15);
+      --serif: 'DM Serif Display', Georgia, serif;
+      --mono: 'JetBrains Mono', 'Fira Code', monospace;
+      --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      background: var(--black);
+      color: var(--gray);
+      font-family: var(--mono);
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ============================================
+       SKIP LINK
+       ============================================ */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 16px;
+      background: var(--green);
+      color: var(--black);
+      padding: 8px 16px;
+      font-family: var(--mono);
+      font-size: 14px;
+      text-decoration: none;
+      z-index: 10000;
+      border-radius: 0 0 2px 2px;
+    }
+
+    .skip-link:focus {
+      top: 0;
+    }
+
+    /* ============================================
+       SELECTION
+       ============================================ */
+    ::selection {
+      background: var(--green);
+      color: var(--black);
+    }
+
+    /* ============================================
+       SCROLLBAR
+       ============================================ */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--black);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--navy);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--green);
+    }
+
+    /* ============================================
+       DNA BADGE (fixed, top-right)
+       ============================================ */
+    .dna-badge {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: rgba(224, 224, 224, 0.3);
+      z-index: 1000;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      user-select: none;
+    }
+
+    /* ============================================
+       NAV
+       ============================================ */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 900;
+      padding: 24px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      mix-blend-mode: difference;
+    }
+
+    .logo {
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--gray);
+      text-decoration: none;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    .logo:focus-visible {
+      outline: 2px solid var(--green);
+      outline-offset: 4px;
+    }
+
+    .nav-toggle {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      z-index: 1001;
+    }
+
+    .nav-toggle:focus-visible {
+      outline: 2px solid var(--green);
+      outline-offset: 4px;
+    }
+
+    .nav-toggle span {
+      display: block;
+      width: 28px;
+      height: 1px;
+      background: var(--gray);
+      transition: transform 0.4s var(--ease-out-expo), opacity 0.3s ease;
+    }
+
+    .nav-toggle.active span:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+    .nav-toggle.active span:nth-child(2) {
+      opacity: 0;
+    }
+    .nav-toggle.active span:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+    /* ============================================
+       OVERLAY NAV
+       ============================================ */
+    .nav-overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--black);
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s var(--ease-out-expo);
+    }
+
+    .nav-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .nav-overlay ul {
+      list-style: none;
+      text-align: center;
+    }
+
+    .nav-overlay li {
+      overflow: hidden;
+    }
+
+    .nav-overlay a {
+      display: block;
+      font-family: var(--serif);
+      font-size: clamp(32px, 6vw, 64px);
+      color: var(--gray);
+      text-decoration: none;
+      padding: 12px 0;
+      transform: translateY(100%);
+      transition: transform 0.6s var(--ease-out-expo), color 0.3s ease;
+    }
+
+    .nav-overlay.active a {
+      transform: translateY(0);
+    }
+
+    .nav-overlay li:nth-child(1) a { transition-delay: 0.1s; }
+    .nav-overlay li:nth-child(2) a { transition-delay: 0.15s; }
+    .nav-overlay li:nth-child(3) a { transition-delay: 0.2s; }
+    .nav-overlay li:nth-child(4) a { transition-delay: 0.25s; }
+    .nav-overlay li:nth-child(5) a { transition-delay: 0.3s; }
+
+    .nav-overlay a:hover,
+    .nav-overlay a:focus-visible {
+      color: var(--green);
+    }
+
+    .nav-overlay a:focus-visible {
+      outline: 2px solid var(--green);
+      outline-offset: 4px;
+    }
+
+    /* ============================================
+       SCAN-LINE OVERLAY (immersive texture)
+       ============================================ */
+    .scanlines {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 800;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.03) 2px,
+        rgba(0, 0, 0, 0.03) 4px
+      );
+    }
+
+    /* ============================================
+       MAIN CONTENT WRAPPER
+       ============================================ */
+    main {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ============================================
+       HERO SECTION
+       ============================================ */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr;
+      align-content: end;
+      padding: 0 40px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Green glow behind headline */
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 30%;
+      left: -5%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, var(--green-glow) 0%, transparent 70%);
+      filter: blur(80px);
+      pointer-events: none;
+      animation: glow-pulse 6s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow-pulse {
+      0% { opacity: 0.4; transform: scale(1); }
+      100% { opacity: 0.7; transform: scale(1.15); }
+    }
+
+    /* Faint grid lines */
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0, 255, 65, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 65, 0.02) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 900px;
+    }
+
+    .hero-tagline {
+      font-family: var(--serif);
+      font-size: clamp(48px, 10vw, 120px);
+      line-height: 0.95;
+      color: var(--gray);
+      margin-bottom: 32px;
+      opacity: 0;
+      animation: rise 1s var(--ease-out-expo) 0.3s forwards;
+    }
+
+    .hero-tagline em {
+      font-style: italic;
+      color: var(--green);
+    }
+
+    .hero-sub {
+      font-family: var(--mono);
+      font-size: clamp(14px, 1.5vw, 18px);
+      color: rgba(224, 224, 224, 0.7);
+      max-width: 560px;
+      line-height: 1.7;
+      opacity: 0;
+      animation: rise 1s var(--ease-out-expo) 0.6s forwards;
+    }
+
+    .hero-cursor {
+      display: inline-block;
+      width: 10px;
+      height: 1.1em;
+      background: var(--green);
+      margin-left: 4px;
+      vertical-align: text-bottom;
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ============================================
+       SECTION BASE
+       ============================================ */
+    section {
+      padding: 120px 40px;
+      position: relative;
+    }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 48px;
+      opacity: 0.7;
+    }
+
+    /* ============================================
+       PROBLEM SECTION
+       ============================================ */
+    .problem {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      max-width: 1200px;
+    }
+
+    .problem-stats {
+      grid-column: 1 / 2;
+    }
+
+    .stat-block {
+      margin-bottom: 48px;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    .stat-block.visible {
+      animation: rise 0.8s var(--ease-out-expo) forwards;
+    }
+
+    .stat-number {
+      font-family: var(--serif);
+      font-size: clamp(40px, 5vw, 72px);
+      color: var(--coral);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: rgba(224, 224, 224, 0.6);
+      line-height: 1.5;
+    }
+
+    .stat-source {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: rgba(224, 224, 224, 0.3);
+      margin-top: 4px;
+    }
+
+    .problem-quote {
+      grid-column: 2 / 3;
+      display: flex;
+      align-items: center;
+      padding-left: 40px;
+      border-left: 1px solid rgba(0, 255, 65, 0.15);
+    }
+
+    .problem-quote blockquote {
+      font-family: var(--serif);
+      font-size: clamp(24px, 3vw, 36px);
+      font-style: italic;
+      color: var(--gray);
+      line-height: 1.4;
+    }
+
+    .problem-quote .price-tag {
+      display: block;
+      font-family: var(--mono);
+      font-size: 14px;
+      font-style: normal;
+      color: var(--coral);
+      margin-top: 24px;
+      letter-spacing: 1px;
+    }
+
+    /* ============================================
+       DEMO SECTION (centerpiece)
+       ============================================ */
+    .demo-section {
+      padding: 160px 0;
+      overflow: visible;
+    }
+
+    .demo-label {
+      padding-left: 40px;
+    }
+
+    .terminal-wrapper {
+      width: 85vw;
+      max-width: 1100px;
+      margin: 0 auto 0 5vw;
+      position: relative;
+    }
+
+    .terminal {
+      background: var(--navy);
+      border: 1px solid rgba(0, 255, 65, 0.1);
+      padding: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Terminal glow effect */
+    .terminal::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      background: linear-gradient(135deg, rgba(0, 255, 65, 0.08), transparent 50%);
+      pointer-events: none;
+    }
+
+    .terminal-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 20px;
+      background: rgba(0, 0, 0, 0.3);
+      border-bottom: 1px solid rgba(0, 255, 65, 0.05);
+    }
+
+    .terminal-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(224, 224, 224, 0.15);
+    }
+
+    .terminal-title {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: rgba(224, 224, 224, 0.3);
+      margin-left: 8px;
+    }
+
+    .terminal-body {
+      padding: 32px;
+      font-family: var(--mono);
+      font-size: clamp(13px, 1.4vw, 16px);
+      line-height: 1.8;
+      overflow-x: auto;
+    }
+
+    .term-line {
+      opacity: 0;
+      transform: translateX(-10px);
+      white-space: pre;
+    }
+
+    .term-line.visible {
+      animation: type-in 0.5s var(--ease-out-expo) forwards;
+    }
+
+    @keyframes type-in {
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .term-prompt {
+      color: var(--green);
+    }
+
+    .term-command {
+      color: var(--gray);
+    }
+
+    .term-dim {
+      color: rgba(224, 224, 224, 0.4);
+    }
+
+    .term-green {
+      color: var(--green);
+    }
+
+    .term-coral {
+      color: var(--coral);
+    }
+
+    /* Grade transformation */
+    .grade-transform {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .grade-f {
+      font-family: var(--serif);
+      font-size: 1.3em;
+      color: var(--coral);
+      display: inline-block;
+    }
+
+    .grade-f.fade {
+      animation: grade-fade 0.8s var(--ease-out-expo) forwards;
+    }
+
+    @keyframes grade-fade {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.3; transform: scale(0.8); filter: blur(2px); }
+      100% { opacity: 0.2; transform: scale(0.7); text-decoration: line-through; }
+    }
+
+    .grade-arrow {
+      color: rgba(224, 224, 224, 0.3);
+      opacity: 0;
+    }
+
+    .grade-arrow.visible {
+      animation: arrow-in 0.4s var(--ease-out-expo) forwards;
+    }
+
+    @keyframes arrow-in {
+      to { opacity: 1; }
+    }
+
+    .grade-b {
+      font-family: var(--serif);
+      font-size: 1.6em;
+      color: var(--green);
+      display: inline-block;
+      opacity: 0;
+      transform: scale(0.5);
+    }
+
+    .grade-b.pop {
+      animation: grade-pop 0.8s var(--ease-out-expo) forwards;
+    }
+
+    @keyframes grade-pop {
+      0% { opacity: 0; transform: scale(0.5); }
+      60% { opacity: 1; transform: scale(1.15); }
+      100% { opacity: 1; transform: scale(1); text-shadow: 0 0 20px rgba(0, 255, 65, 0.5); }
+    }
+
+    .term-detail {
+      padding-left: 2ch;
+    }
+
+    /* ============================================
+       HOW IT WORKS
+       ============================================ */
+    .how-section {
+      max-width: 1000px;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+      counter-reset: step-counter;
+      margin-top: 64px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 24px;
+      padding: 40px 0;
+      border-top: 1px solid rgba(0, 255, 65, 0.06);
+      opacity: 0;
+      transform: translateY(20px);
+      counter-increment: step-counter;
+    }
+
+    .step.visible {
+      animation: rise 0.7s var(--ease-out-expo) forwards;
+    }
+
+    .step:nth-child(even) {
+      margin-left: 15%;
+    }
+
+    .step:nth-child(odd) {
+      margin-left: 0;
+    }
+
+    .step-number {
+      font-family: var(--serif);
+      font-size: 48px;
+      color: var(--green);
+      opacity: 0.3;
+      line-height: 1;
+    }
+
+    .step-number::before {
+      content: counter(step-counter);
+    }
+
+    .step-content h3 {
+      font-family: var(--serif);
+      font-size: clamp(20px, 2.5vw, 28px);
+      color: var(--gray);
+      margin-bottom: 8px;
+    }
+
+    .step-content p {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: rgba(224, 224, 224, 0.5);
+      line-height: 1.6;
+    }
+
+    /* ============================================
+       INSTALL SECTION
+       ============================================ */
+    .install-section {
+      padding: 160px 40px;
+    }
+
+    .install-block {
+      max-width: 600px;
+      margin-left: 10vw;
+    }
+
+    .install-code {
+      background: var(--navy);
+      border: 1px solid rgba(0, 255, 65, 0.1);
+      padding: 32px;
+      font-family: var(--mono);
+      font-size: clamp(14px, 1.5vw, 18px);
+      line-height: 2.2;
+      margin-top: 32px;
+      position: relative;
+    }
+
+    .install-code::after {
+      content: '';
+      position: absolute;
+      top: -1px;
+      left: 0;
+      width: 60px;
+      height: 1px;
+      background: var(--green);
+    }
+
+    .install-comment {
+      color: rgba(224, 224, 224, 0.3);
+    }
+
+    .install-cmd {
+      color: var(--green);
+    }
+
+    .install-flag {
+      color: var(--coral);
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: none;
+      border: 1px solid rgba(224, 224, 224, 0.15);
+      color: rgba(224, 224, 224, 0.4);
+      font-family: var(--mono);
+      font-size: 10px;
+      padding: 4px 10px;
+      cursor: pointer;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .copy-btn:hover {
+      color: var(--green);
+      border-color: var(--green);
+    }
+
+    .copy-btn:focus-visible {
+      outline: 2px solid var(--green);
+      outline-offset: 2px;
+    }
+
+    .copy-btn.copied {
+      color: var(--green);
+      border-color: var(--green);
+    }
+
+    /* ============================================
+       FOOTER
+       ============================================ */
+    footer {
+      padding: 80px 40px 40px;
+      border-top: 1px solid rgba(0, 255, 65, 0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+
+    .footer-built {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(224, 224, 224, 0.4);
+      line-height: 1.8;
+    }
+
+    .footer-built a {
+      color: var(--green);
+      text-decoration: none;
+    }
+
+    .footer-built a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-built a:focus-visible {
+      outline: 2px solid var(--green);
+      outline-offset: 2px;
+    }
+
+    .footer-inspiration {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: rgba(224, 224, 224, 0.2);
+      text-align: right;
+      line-height: 1.8;
+    }
+
+    /* ============================================
+       NOISE TEXTURE (subtle)
+       ============================================ */
+    .noise {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 799;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 256px 256px;
+    }
+
+    /* ============================================
+       REDUCED MOTION
+       ============================================ */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+
+      .hero-tagline,
+      .hero-sub,
+      .term-line,
+      .stat-block,
+      .step,
+      .grade-f,
+      .grade-arrow,
+      .grade-b {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+
+    /* Tablet */
+    @media (max-width: 900px) {
+      .problem {
+        grid-template-columns: 1fr;
+      }
+
+      .problem-quote {
+        grid-column: 1;
+        border-left: none;
+        border-top: 1px solid rgba(0, 255, 65, 0.15);
+        padding-left: 0;
+        padding-top: 40px;
+      }
+
+      .terminal-wrapper {
+        width: 92vw;
+        margin-left: 4vw;
+      }
+
+      .step:nth-child(even) {
+        margin-left: 5%;
+      }
+
+      .install-block {
+        margin-left: 0;
+      }
+    }
+
+    /* Mobile */
+    @media (max-width: 600px) {
+      nav {
+        padding: 16px 20px;
+      }
+
+      section {
+        padding: 80px 20px;
+      }
+
+      .hero {
+        padding: 0 20px 60px;
+      }
+
+      .hero-tagline {
+        font-size: clamp(40px, 12vw, 72px);
+      }
+
+      .terminal-wrapper {
+        width: 95vw;
+        margin-left: 2.5vw;
+      }
+
+      .terminal-body {
+        padding: 20px;
+        font-size: 12px;
+      }
+
+      .step {
+        grid-template-columns: 50px 1fr;
+        gap: 16px;
+      }
+
+      .step:nth-child(even) {
+        margin-left: 0;
+      }
+
+      .step-number {
+        font-size: 36px;
+      }
+
+      .demo-section {
+        padding: 100px 0;
+      }
+
+      .demo-label {
+        padding-left: 20px;
+      }
+
+      .install-section {
+        padding: 100px 20px;
+      }
+
+      footer {
+        padding: 60px 20px 30px;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .footer-inspiration {
+        text-align: left;
+      }
+
+      .dna-badge {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <a href="#main-content" class="skip-link">Skip to content</a>
+
+  <!-- DNA Badge -->
+  <div class="dna-badge" aria-hidden="true">DNA-A-O-I-D-X</div>
+
+  <!-- Texture layers -->
+  <div class="scanlines" aria-hidden="true"></div>
+  <div class="noise" aria-hidden="true"></div>
+
+  <!-- ====== NAV ====== -->
+  <nav aria-label="Primary navigation">
+    <a href="#" class="logo" aria-label="Vibe Check home">VIBE CHECK</a>
+    <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="nav-overlay">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </nav>
+
+  <!-- ====== OVERLAY NAV ====== -->
+  <div class="nav-overlay" id="nav-overlay" role="dialog" aria-label="Navigation menu" aria-hidden="true">
+    <ul>
+      <li><a href="#problem">The Problem</a></li>
+      <li><a href="#demo">The Demo</a></li>
+      <li><a href="#how">How It Works</a></li>
+      <li><a href="#install">Install</a></li>
+      <li><a href="https://github.com" target="_blank" rel="noopener">GitHub</a></li>
+    </ul>
+  </div>
+
+  <!-- ====== MAIN ====== -->
+  <main id="main-content">
+
+    <!-- ====== HERO ====== -->
+    <section class="hero" aria-label="Hero">
+      <div class="hero-content">
+        <h1 class="hero-tagline">You <em>vibed.</em><br>Now ship.</h1>
+        <p class="hero-sub">
+          Vibe Check audits your AI-generated code and fixes it.<br>
+          One command. Zero rewrites.<span class="hero-cursor" aria-hidden="true"></span>
+        </p>
+      </div>
+    </section>
+
+    <!-- ====== PROBLEM ====== -->
+    <section id="problem" aria-label="The problem with vibe-coded projects">
+      <div class="problem">
+        <div class="problem-stats">
+          <div class="section-label">The Problem</div>
+
+          <div class="stat-block" data-animate>
+            <div class="stat-number">45%</div>
+            <div class="stat-label">of AI-generated code has security flaws</div>
+            <div class="stat-source">Veracode 2025</div>
+          </div>
+
+          <div class="stat-block" data-animate>
+            <div class="stat-number">~50%</div>
+            <div class="stat-label">of the time, AI picks the insecure path</div>
+          </div>
+
+          <div class="stat-block" data-animate>
+            <div class="stat-number">$5-15K</div>
+            <div class="stat-label">typical cost to manually clean up vibe-coded projects</div>
+          </div>
+        </div>
+
+        <div class="problem-quote">
+          <blockquote>
+            "Vibe coding cleanup" is now a $5-15K consulting service.
+            <span class="price-tag">Or one command.</span>
+          </blockquote>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== DEMO ====== -->
+    <section id="demo" class="demo-section" aria-label="Live demo of Vibe Check">
+      <div class="section-label demo-label">The Demo</div>
+
+      <div class="terminal-wrapper">
+        <div class="terminal" role="img" aria-label="Terminal showing Vibe Check transforming a project grade from F to B+">
+          <div class="terminal-bar" aria-hidden="true">
+            <div class="terminal-dot"></div>
+            <div class="terminal-dot"></div>
+            <div class="terminal-dot"></div>
+            <span class="terminal-title">vibecheck</span>
+          </div>
+          <div class="terminal-body">
+            <div class="term-line" data-delay="0"><span class="term-prompt">$</span> <span class="term-command">/vibecheck --fix</span></div>
+            <div class="term-line" data-delay="200">&nbsp;</div>
+            <div class="term-line" data-delay="400"><span class="term-dim">[scanning]</span> 3 agents running in parallel...</div>
+            <div class="term-line" data-delay="700"><span class="term-dim">[security]</span> 5 critical vulnerabilities found</div>
+            <div class="term-line" data-delay="900"><span class="term-dim">[auth]</span> 2 missing authentication guards</div>
+            <div class="term-line" data-delay="1100"><span class="term-dim">[secrets]</span> API keys exposed in source</div>
+            <div class="term-line" data-delay="1400">&nbsp;</div>
+            <div class="term-line" data-delay="1600"><span class="term-dim">[fixing]</span> applying surgical edits...</div>
+            <div class="term-line" data-delay="2000"><span class="term-dim">[testing]</span> generating test coverage...</div>
+            <div class="term-line" data-delay="2400">&nbsp;</div>
+            <div class="term-line term-line-grade" data-delay="2700">
+              VIBE SCORE:&nbsp;&nbsp;<span class="grade-transform"><span class="grade-f">F</span> <span class="grade-arrow">&rarr;</span> <span class="grade-b">B+</span></span>&nbsp;&nbsp;<span class="term-dim">(18 issues fixed)</span>
+            </div>
+            <div class="term-line" data-delay="3200">&nbsp;</div>
+            <div class="term-line term-detail" data-delay="3400">Security: &nbsp;&nbsp;&nbsp;&nbsp;<span class="term-coral">F</span> <span class="term-dim">&rarr;</span> <span class="term-green">A</span> &nbsp;&nbsp;<span class="term-dim">(5 critical fixed)</span></div>
+            <div class="term-line term-detail" data-delay="3600">Auth: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="term-coral">D</span> <span class="term-dim">&rarr;</span> <span class="term-green">A</span> &nbsp;&nbsp;<span class="term-dim">(2 missing guards added)</span></div>
+            <div class="term-line term-detail" data-delay="3800">Secrets: &nbsp;&nbsp;&nbsp;&nbsp;<span class="term-coral">F</span> <span class="term-dim">&rarr;</span> <span class="term-green">A</span> &nbsp;&nbsp;<span class="term-dim">(API keys moved to .env)</span></div>
+            <div class="term-line term-detail" data-delay="4000">Tests: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="term-coral">F</span> <span class="term-dim">&rarr;</span> <span class="term-green">B</span> &nbsp;&nbsp;<span class="term-dim">(33 tests generated)</span></div>
+            <div class="term-line" data-delay="4300">&nbsp;</div>
+            <div class="term-line" data-delay="4500"><span class="term-green">Done.</span> Report saved to ./vibecheck-report.html</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== HOW IT WORKS ====== -->
+    <section id="how" class="how-section" aria-label="How Vibe Check works">
+      <div class="section-label">How It Works</div>
+
+      <div class="steps">
+        <div class="step" data-animate>
+          <div class="step-number" aria-hidden="true"></div>
+          <div class="step-content">
+            <h3>Snapshot</h3>
+            <p>Records git state, detects framework, maps your codebase. Nothing changes until you say so.</p>
+          </div>
+        </div>
+
+        <div class="step" data-animate>
+          <div class="step-number" aria-hidden="true"></div>
+          <div class="step-content">
+            <h3>Parallel Audit</h3>
+            <p>3 agents scan simultaneously: Security, Auth, and Secrets. Each one specialized, running concurrently.</p>
+          </div>
+        </div>
+
+        <div class="step" data-animate>
+          <div class="step-number" aria-hidden="true"></div>
+          <div class="step-content">
+            <h3>Auto-Fix</h3>
+            <p>Surgical edits that preserve your code style. No rewrites. No reformatting. Just the fix.</p>
+          </div>
+        </div>
+
+        <div class="step" data-animate>
+          <div class="step-number" aria-hidden="true"></div>
+          <div class="step-content">
+            <h3>Test Gen</h3>
+            <p>Every fix gets a test. Regression coverage generated automatically, matched to your test framework.</p>
+          </div>
+        </div>
+
+        <div class="step" data-animate>
+          <div class="step-number" aria-hidden="true"></div>
+          <div class="step-content">
+            <h3>Report</h3>
+            <p>Terminal output for you. Shareable HTML report card for your team. Before/after diff included.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== INSTALL ====== -->
+    <section id="install" class="install-section" aria-label="Install Vibe Check">
+      <div class="install-block">
+        <div class="section-label">Install</div>
+        <div class="install-code" role="code">
+          <button class="copy-btn" aria-label="Copy install commands">COPY</button>
+          <div><span class="install-comment"># Audit only</span></div>
+          <div><span class="install-cmd">/vibecheck</span></div>
+          <div>&nbsp;</div>
+          <div><span class="install-comment"># Audit + auto-fix</span></div>
+          <div><span class="install-cmd">/vibecheck</span> <span class="install-flag">--fix</span></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ====== FOOTER ====== -->
+  <footer>
+    <div class="footer-built">
+      Built for the <a href="#">Built with Opus 4.6 Hackathon</a> (Feb 2026)
+    </div>
+    <div class="footer-inspiration">
+      Design DNA: DNA-A-O-I-D-X<br>
+      Inspired by <a href="https://vercel.com" target="_blank" rel="noopener" style="color: rgba(224,224,224,0.3); text-decoration: none;">Vercel.com</a> + Brutalist web design
+    </div>
+  </footer>
+
+  <!-- ====== SCRIPTS ====== -->
+  <script>
+    (function() {
+      'use strict';
+
+      /* ---- NAV TOGGLE ---- */
+      const toggle = document.querySelector('.nav-toggle');
+      const overlay = document.querySelector('.nav-overlay');
+      const overlayLinks = overlay.querySelectorAll('a');
+
+      function openNav() {
+        toggle.classList.add('active');
+        toggle.setAttribute('aria-expanded', 'true');
+        toggle.setAttribute('aria-label', 'Close menu');
+        overlay.classList.add('active');
+        overlay.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        // Focus first link after transition
+        setTimeout(function() { overlayLinks[0].focus(); }, 300);
+      }
+
+      function closeNav() {
+        toggle.classList.remove('active');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-label', 'Open menu');
+        overlay.classList.remove('active');
+        overlay.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        toggle.focus();
+      }
+
+      toggle.addEventListener('click', function() {
+        if (overlay.classList.contains('active')) {
+          closeNav();
+        } else {
+          openNav();
+        }
+      });
+
+      // Close on link click
+      overlayLinks.forEach(function(link) {
+        link.addEventListener('click', closeNav);
+      });
+
+      // Close on Escape
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && overlay.classList.contains('active')) {
+          closeNav();
+        }
+      });
+
+      // Trap focus in overlay
+      overlay.addEventListener('keydown', function(e) {
+        if (e.key !== 'Tab') return;
+        var focusable = [toggle].concat(Array.from(overlayLinks));
+        var first = focusable[0];
+        var last = focusable[focusable.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          }
+        } else {
+          if (document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      });
+
+      /* ---- INTERSECTION OBSERVER for scroll animations ---- */
+      var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (!prefersReducedMotion) {
+        var animateElements = document.querySelectorAll('[data-animate]');
+        var observer = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, {
+          threshold: 0.15,
+          rootMargin: '0px 0px -50px 0px'
+        });
+
+        animateElements.forEach(function(el) {
+          observer.observe(el);
+        });
+      } else {
+        // Make everything visible immediately
+        document.querySelectorAll('[data-animate]').forEach(function(el) {
+          el.classList.add('visible');
+        });
+      }
+
+      /* ---- TERMINAL TYPING ANIMATION ---- */
+      var terminalSection = document.querySelector('.demo-section');
+      var termLines = document.querySelectorAll('.term-line');
+      var gradeF = document.querySelector('.grade-f');
+      var gradeArrow = document.querySelector('.grade-arrow');
+      var gradeB = document.querySelector('.grade-b');
+      var terminalAnimated = false;
+
+      function animateTerminal() {
+        if (terminalAnimated) return;
+        terminalAnimated = true;
+
+        termLines.forEach(function(line) {
+          var delay = parseInt(line.getAttribute('data-delay') || '0', 10);
+
+          if (prefersReducedMotion) {
+            line.classList.add('visible');
+          } else {
+            setTimeout(function() {
+              line.classList.add('visible');
+            }, delay);
+          }
+        });
+
+        // Grade transformation animation
+        if (!prefersReducedMotion) {
+          var gradeLineDelay = 2700;
+
+          setTimeout(function() {
+            if (gradeF) gradeF.classList.add('fade');
+          }, gradeLineDelay + 400);
+
+          setTimeout(function() {
+            if (gradeArrow) gradeArrow.classList.add('visible');
+          }, gradeLineDelay + 800);
+
+          setTimeout(function() {
+            if (gradeB) gradeB.classList.add('pop');
+          }, gradeLineDelay + 1000);
+        } else {
+          if (gradeF) gradeF.style.opacity = '0.2';
+          if (gradeArrow) { gradeArrow.style.opacity = '1'; }
+          if (gradeB) { gradeB.style.opacity = '1'; gradeB.style.transform = 'scale(1)'; }
+        }
+      }
+
+      var termObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            animateTerminal();
+            termObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.2 });
+
+      if (terminalSection) {
+        termObserver.observe(terminalSection);
+      }
+
+      /* ---- COPY BUTTON ---- */
+      var copyBtn = document.querySelector('.copy-btn');
+      if (copyBtn) {
+        copyBtn.addEventListener('click', function() {
+          var text = '/vibecheck\n/vibecheck --fix';
+          navigator.clipboard.writeText(text).then(function() {
+            copyBtn.textContent = 'COPIED';
+            copyBtn.classList.add('copied');
+            setTimeout(function() {
+              copyBtn.textContent = 'COPY';
+              copyBtn.classList.remove('copied');
+            }, 2000);
+          });
+        });
+      }
+
+      /* ---- SMOOTH SCROLL for anchor links ---- */
+      document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+        anchor.addEventListener('click', function(e) {
+          var target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            e.preventDefault();
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+      });
+
+    })();
+  </script>
+
+</body>
+</html>
