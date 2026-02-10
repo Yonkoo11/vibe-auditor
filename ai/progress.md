@@ -53,6 +53,21 @@ Last updated: 2026-02-10
 9. Demo video
 10. Deploy landing page (GitHub Pages)
 
+## Visual Overhaul (2026-02-10) - DONE
+- Body background: gradient mesh (green/purple/cyan radials) instead of flat #0c0c14
+- Orbs: 2x opacity boost (0.14->0.25), reduced blur (100->80px) for sharper color
+- Hero spotlight beam: conic-gradient beam from top center
+- Section atmospheres: 2x stronger with larger ellipses
+- Animated gradient borders on ALL tiles (rotating conic-gradient, like score card)
+- Tile glass: stronger background (0.75 alpha), deeper shadows
+- Score card bloom: larger (500px), 2x opacity
+- Dot grid: 0.07->0.10 opacity
+- Flow line: 50% stronger gradient stops, wider glow
+- Section dividers: wider (700px), brighter (0.4 opacity)
+- Cursor glow: 500px, stronger (0.10)
+- Enhanced hover: outer glow, deeper translateY
+- Test counter: fixed 33->50
+
 ## Landing Page Polish (minor)
 - Excess whitespace between "See the fix" and "Get started" sections
 - Bento "vibe preservation" tile and standalone "See the fix" section overlap thematically
