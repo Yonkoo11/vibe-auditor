@@ -352,6 +352,7 @@
     -webkit-text-fill-color: transparent;
     background-clip: text;
     animation: gradientShift 6s ease-in-out infinite;
+    filter: drop-shadow(0 0 40px rgba(0, 229, 160, 0.3));
   }
   @keyframes gradientShift {
     0%, 100% { background-position: 0% 50%; }
@@ -403,9 +404,9 @@
     .tile:hover {
       border-color: rgba(255,255,255,0.15);
       box-shadow:
-        inset 0 0 60px rgba(0, 229, 160, 0.06),
+        inset 0 0 60px rgba(255,255,255,0.03),
         0 8px 40px rgba(0, 0, 0, 0.4),
-        0 0 60px rgba(0, 229, 160, 0.05);
+        0 0 100px var(--tile-glow, rgba(0, 229, 160, 0.08));
       transform: translateY(-3px);
     }
   }
@@ -458,6 +459,7 @@
     backdrop-filter: blur(24px) saturate(1.2);
     -webkit-backdrop-filter: blur(24px) saturate(1.2);
     border-bottom: 1px solid var(--border);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.06), 0 4px 30px rgba(0,0,0,0.3);
   }
 
   .nav-brand {
@@ -664,13 +666,14 @@
     padding: 32px 0;
     text-align: center;
     border-top: 1px solid rgba(255,255,255,0.04);
-    border-bottom: 1px solid rgba(255,255,255,0.04);
+    border-bottom: 1px solid rgba(0, 229, 160, 0.15);
     background: rgba(255,255,255,0.01);
     max-width: 1280px;
     margin: 0 auto;
     opacity: 0;
     transform: translateY(20px);
     transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+    box-shadow: 0 1px 30px rgba(0, 229, 160, 0.06);
   }
 
   .social-proof.visible {
@@ -750,7 +753,7 @@
     padding: 36px 32px 32px;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 4px 60px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    box-shadow: 0 4px 60px rgba(0, 0, 0, 0.3), 0 0 120px rgba(0, 229, 160, 0.12), 0 0 200px rgba(0, 229, 160, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.04);
   }
 
   .score-card::before {
@@ -1705,9 +1708,9 @@
     .tile:hover {
       border-color: rgba(255,255,255,0.15);
       box-shadow:
-        inset 0 0 60px rgba(0, 229, 160, 0.06),
+        inset 0 0 60px rgba(255,255,255,0.03),
         0 8px 40px rgba(0, 0, 0, 0.4),
-        0 0 60px rgba(0, 229, 160, 0.05);
+        0 0 100px var(--tile-glow, rgba(0, 229, 160, 0.08));
       transform: translateY(-3px);
     }
 
@@ -1715,7 +1718,10 @@
 
     .tile-security:hover {
       border-color: rgba(124, 92, 252, 0.8);
-      box-shadow: 0 0 40px rgba(124, 92, 252, 0.12), inset 0 1px 0 rgba(255,255,255,0.05);
+      box-shadow:
+        inset 0 0 60px rgba(255,255,255,0.03),
+        0 8px 40px rgba(0, 0, 0, 0.4),
+        0 0 100px rgba(255, 107, 53, 0.15);
     }
 
     .threat-cell:hover {
@@ -1729,20 +1735,40 @@
     .tile-auth:hover {
       background: rgba(12, 12, 20, 0.9);
       border-left-color: rgba(0, 160, 196, 0.7);
+      box-shadow:
+        inset 0 0 60px rgba(255,255,255,0.03),
+        0 8px 40px rgba(0, 0, 0, 0.4),
+        0 0 100px rgba(0, 180, 216, 0.15);
     }
 
     .tile-secret:hover {
-      box-shadow: 0 4px 30px rgba(0,0,0,0.3), 0 0 30px rgba(255, 107, 53, 0.06);
+      box-shadow:
+        inset 0 0 60px rgba(255,255,255,0.03),
+        0 8px 40px rgba(0, 0, 0, 0.4),
+        0 0 100px rgba(0, 229, 160, 0.12);
     }
 
     .tile-tests:hover {
       border-color: rgba(0, 229, 160, 0.2);
+      box-shadow:
+        inset 0 0 60px rgba(255,255,255,0.03),
+        0 8px 40px rgba(0, 0, 0, 0.4),
+        0 0 100px rgba(0, 229, 160, 0.15);
     }
 
-    .tile-vibe:hover { transform: translateY(-2px); }
+    .tile-vibe:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        inset 0 0 60px rgba(255,255,255,0.03),
+        0 8px 40px rgba(0, 0, 0, 0.4),
+        0 0 100px rgba(124, 92, 252, 0.12);
+    }
 
     .tile-install:hover {
-      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      box-shadow:
+        inset 0 0 60px rgba(255,255,255,0.03),
+        0 8px 40px rgba(0, 0, 0, 0.4),
+        0 0 100px rgba(0, 229, 160, 0.10);
     }
 
     .copy-hint:hover {
@@ -1979,6 +2005,7 @@
     opacity: 0;
     transform: translateY(8px);
     transition: opacity 0.6s var(--ease) 0.3s, transform 0.6s var(--ease) 0.3s;
+    text-shadow: 0 0 30px rgba(0, 229, 160, 0.3);
   }
 
   .bento-header-title.visible {
@@ -2002,6 +2029,36 @@
   .tile-tests   { transform: translate(-10px, 25px) scale(0.96); }
   .tile-vibe    { transform: translate(-30px, 20px) scale(0.96); }
   .tile-install { transform: translate(20px, 30px) scale(0.96); }
+
+  /* ── Tile type colored glows (content emits light) ── */
+  .tile-demo {
+    --tile-glow: rgba(0, 229, 160, 0.15);
+    box-shadow: 0 4px 30px rgba(0,0,0,0.3), 0 0 80px rgba(0, 229, 160, 0.08), inset 0 1px 0 rgba(255,255,255,0.05);
+  }
+  .tile-security {
+    --tile-glow: rgba(255, 107, 53, 0.15);
+    box-shadow: 0 4px 30px rgba(0,0,0,0.3), 0 0 80px rgba(255, 107, 53, 0.08), inset 0 1px 0 rgba(255,255,255,0.05);
+  }
+  .tile-auth {
+    --tile-glow: rgba(0, 180, 216, 0.15);
+    box-shadow: 0 4px 30px rgba(0,0,0,0.3), 0 0 80px rgba(0, 180, 216, 0.08), inset 0 1px 0 rgba(255,255,255,0.05);
+  }
+  .tile-secret {
+    --tile-glow: rgba(0, 229, 160, 0.12);
+    box-shadow: 0 4px 30px rgba(0,0,0,0.3), 0 0 80px rgba(0, 229, 160, 0.07), inset 0 1px 0 rgba(255,255,255,0.05);
+  }
+  .tile-tests {
+    --tile-glow: rgba(0, 229, 160, 0.15);
+    box-shadow: 0 4px 30px rgba(0,0,0,0.3), 0 0 80px rgba(0, 229, 160, 0.08), inset 0 1px 0 rgba(255,255,255,0.05);
+  }
+  .tile-vibe {
+    --tile-glow: rgba(124, 92, 252, 0.12);
+    box-shadow: 0 4px 30px rgba(0,0,0,0.3), 0 0 80px rgba(124, 92, 252, 0.07), inset 0 1px 0 rgba(255,255,255,0.05);
+  }
+  .tile-install {
+    --tile-glow: rgba(0, 229, 160, 0.10);
+    box-shadow: 0 4px 30px rgba(0,0,0,0.3), 0 0 80px rgba(0, 229, 160, 0.06), inset 0 1px 0 rgba(255,255,255,0.05);
+  }
 
   /* ── Reduced motion: disable scroll-driven effects ── */
   @media (prefers-reduced-motion: reduce) {
@@ -2069,8 +2126,8 @@
 
   /* ── Before/After Code Comparison (Feature 2) ── */
   .before-after {
-    padding: 120px 48px 60px;
-    max-width: 1200px;
+    padding: 100px 48px 60px;
+    max-width: 1100px;
     margin: 0 auto;
     text-align: center;
     opacity: 0;
@@ -2083,96 +2140,244 @@
   }
   .ba-headline {
     font-family: var(--font-display);
-    font-size: var(--text-xl);
+    font-size: var(--text-2xl);
     color: var(--text);
+    margin-bottom: 16px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .ba-subtitle {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    color: var(--muted);
     margin-bottom: 48px;
-    font-weight: 600;
+  }
+  .ba-subtitle strong {
+    color: #ff6b6b;
+  }
+  .ba-subtitle .ba-sub-fixed {
+    color: var(--primary);
   }
   .ba-container {
     display: flex;
     align-items: stretch;
-    gap: 24px;
+    gap: 32px;
     justify-content: center;
   }
+  /* ── Terminal window chrome ── */
   .ba-panel {
     flex: 1;
-    max-width: 480px;
-    border-radius: 16px;
+    max-width: 520px;
+    border-radius: 12px;
     overflow: hidden;
     text-align: left;
+    position: relative;
   }
+  .ba-titlebar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: rgba(30, 30, 50, 0.95);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .ba-dots {
+    display: flex;
+    gap: 6px;
+  }
+  .ba-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+  .ba-before .ba-dot:nth-child(1) { background: #ff5f57; }
+  .ba-before .ba-dot:nth-child(2) { background: #febc2e; }
+  .ba-before .ba-dot:nth-child(3) { background: #28c840; }
+  .ba-after .ba-dot:nth-child(1) { background: #ff5f57; }
+  .ba-after .ba-dot:nth-child(2) { background: #febc2e; }
+  .ba-after .ba-dot:nth-child(3) { background: #28c840; }
+  .ba-filename {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--muted);
+    margin-left: 8px;
+  }
+  .ba-badge {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-left: auto;
+  }
+  .ba-before .ba-badge {
+    color: #ff6b6b;
+    background: rgba(255, 60, 60, 0.15);
+    border: 1px solid rgba(255, 60, 60, 0.25);
+  }
+  .ba-after .ba-badge {
+    color: var(--primary);
+    background: rgba(0, 229, 160, 0.12);
+    border: 1px solid rgba(0, 229, 160, 0.25);
+  }
+  /* ── Panel surfaces ── */
   .ba-before {
-    background: rgba(255, 60, 60, 0.03);
-    border: 1px solid rgba(255, 60, 60, 0.12);
+    background: rgba(20, 16, 24, 0.95);
+    border: 1px solid rgba(255, 60, 60, 0.18);
+    box-shadow:
+      0 8px 60px rgba(0,0,0,0.5),
+      0 0 120px rgba(255, 60, 60, 0.08),
+      inset 0 1px 0 rgba(255,255,255,0.04);
   }
   .ba-after {
-    background: rgba(0, 229, 160, 0.03);
-    border: 1px solid rgba(0, 229, 160, 0.12);
+    background: rgba(14, 20, 18, 0.95);
+    border: 1px solid rgba(0, 229, 160, 0.18);
+    box-shadow:
+      0 8px 60px rgba(0,0,0,0.5),
+      0 0 120px rgba(0, 229, 160, 0.10),
+      inset 0 1px 0 rgba(255,255,255,0.04);
   }
-  .ba-label {
+  /* ── Code area with line numbers ── */
+  .ba-code-wrap {
+    display: flex;
+    overflow-x: auto;
+  }
+  .ba-linenums {
+    padding: 16px 0;
+    text-align: right;
+    user-select: none;
+    border-right: 1px solid rgba(255,255,255,0.05);
+    flex-shrink: 0;
+  }
+  .ba-linenum {
+    display: block;
     font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    padding: 12px 20px;
-    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 0.72rem;
+    line-height: 1.85;
+    color: rgba(255,255,255,0.15);
+    padding: 0 12px;
+    min-width: 40px;
   }
-  .ba-before .ba-label { color: #ff6b6b; }
-  .ba-after .ba-label { color: var(--primary); }
   .ba-code {
-    padding: 20px;
+    padding: 16px 16px;
     margin: 0;
     font-family: var(--font-mono);
     font-size: 0.78rem;
-    line-height: 1.7;
-    color: var(--muted);
+    line-height: 1.85;
+    color: #8b8ba8;
     overflow-x: auto;
+    flex: 1;
+  }
+  /* ── Diff-style line highlights ── */
+  .ba-line {
+    display: block;
+    padding: 0 6px;
+    border-radius: 3px;
+    white-space: pre;
   }
   .ba-line.ba-vuln {
+    color: #ffa0a0;
+    background: rgba(255, 60, 60, 0.12);
+    border-left: 3px solid #ff5f57;
+    padding-left: 10px;
+    margin-left: -6px;
+  }
+  .ba-line.ba-removed {
     color: #ff6b6b;
-    background: rgba(255, 60, 60, 0.06);
-    display: inline-block;
-    width: 100%;
-    padding: 0 4px;
-    border-radius: 2px;
+    text-decoration: line-through;
+    text-decoration-color: rgba(255,107,107,0.4);
+    opacity: 0.5;
   }
   .ba-line.ba-fixed {
-    color: var(--primary);
-    background: rgba(0, 229, 160, 0.06);
-    display: inline-block;
-    width: 100%;
-    padding: 0 4px;
-    border-radius: 2px;
+    color: #5bffb0;
+    background: rgba(0, 229, 160, 0.10);
+    border-left: 3px solid var(--primary);
+    padding-left: 10px;
+    margin-left: -6px;
   }
-  .ba-arrow {
+  /* Syntax token colors */
+  .ba-line .tok-kw { color: #c792ea; }
+  .ba-line .tok-str { color: #c3e88d; }
+  .ba-line .tok-fn { color: #82aaff; }
+  .ba-line .tok-param { color: #f78c6c; }
+  .ba-line .tok-op { color: #89ddff; }
+  .ba-line .tok-comment { color: #546e7a; font-style: italic; }
+  .ba-line.ba-vuln .tok-str { color: #ff8a80; }
+  .ba-line.ba-fixed .tok-str { color: #80ffb4; }
+  /* ── Center arrow ── */
+  .ba-arrow-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .ba-arrow-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(0, 229, 160, 0.10);
+    border: 1px solid rgba(0, 229, 160, 0.25);
     display: flex;
     align-items: center;
-    font-size: 1.5rem;
-    color: var(--muted);
-    opacity: 0.3;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: var(--primary);
+    box-shadow: 0 0 30px rgba(0, 229, 160, 0.15);
+    animation: arrowPulse 3s ease-in-out infinite;
+  }
+  .ba-arrow-label {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.7;
+  }
+  @keyframes arrowPulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(0, 229, 160, 0.10); }
+    50% { box-shadow: 0 0 40px rgba(0, 229, 160, 0.25); }
   }
   .ba-caption {
-    margin-top: 24px;
+    margin-top: 32px;
     font-size: var(--text-sm);
-    color: var(--muted);
-    opacity: 0.6;
+    color: var(--text-secondary);
+  }
+  .ba-caption code {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    padding: 2px 7px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
   }
   @media (max-width: 767px) {
     .before-after {
-      padding: 80px 20px 60px;
+      padding: 80px 16px 60px;
+    }
+    .ba-headline {
+      font-size: 1.6rem;
     }
     .ba-container {
       flex-direction: column;
       align-items: center;
+      gap: 16px;
     }
     .ba-panel {
       max-width: 100%;
       width: 100%;
     }
-    .ba-arrow {
-      transform: rotate(90deg);
-      font-size: 1.2rem;
-      padding: 8px 0;
+    .ba-arrow-col {
+      flex-direction: row;
+      padding: 4px 0;
+    }
+    .ba-arrow-icon {
+      width: 36px;
+      height: 36px;
+      font-size: 1rem;
     }
   }
   @media (prefers-reduced-motion: reduce) {
@@ -2227,6 +2432,7 @@
     border-radius: 8px;
     padding: 16px 24px;
     text-align: left;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.2), 0 0 40px rgba(0, 229, 160, 0.04);
   }
   .install-step-num {
     font-family: var(--font-mono);
@@ -2273,9 +2479,10 @@
   /* ── Footer ── */
   .site-footer {
     padding: 48px 48px 24px;
-    border-top: 1px solid rgba(255,255,255,0.04);
+    border-top: 1px solid rgba(0, 229, 160, 0.1);
     max-width: 1200px;
     margin: 0 auto;
+    box-shadow: 0 -1px 30px rgba(0, 229, 160, 0.04);
   }
   .footer-content {
     display: flex;
@@ -2615,32 +2822,50 @@
   <div class="section-divider" aria-hidden="true"></div>
   <section class="before-after section-atmo atmo-compare" id="beforeAfter">
     <h2 class="ba-headline">See the fix.</h2>
+    <p class="ba-subtitle"><strong>SQL injection</strong> becomes a <span class="ba-sub-fixed">parameterized query</span> &mdash; your code, your style, zero breakage.</p>
 
     <div class="ba-container">
       <div class="ba-panel ba-before">
-        <div class="ba-label">Before</div>
-        <pre class="ba-code"><code><span class="ba-line ba-vuln">app.get('/users/:id', (req, res) =&gt; {</span>
-<span class="ba-line ba-vuln">  const query = `SELECT * FROM users WHERE id = ${req.params.id}`;</span>
-<span class="ba-line">  db.query(query, (err, result) =&gt; {</span>
-<span class="ba-line">    res.json(result);</span>
+        <div class="ba-titlebar">
+          <div class="ba-dots"><span class="ba-dot"></span><span class="ba-dot"></span><span class="ba-dot"></span></div>
+          <span class="ba-filename">routes/users.js</span>
+          <span class="ba-badge">Vulnerable</span>
+        </div>
+        <div class="ba-code-wrap">
+          <div class="ba-linenums"><span class="ba-linenum">12</span><span class="ba-linenum">13</span><span class="ba-linenum">14</span><span class="ba-linenum">15</span><span class="ba-linenum">16</span><span class="ba-linenum">17</span></div>
+          <pre class="ba-code"><code><span class="ba-line"><span class="tok-fn">app</span><span class="tok-op">.</span><span class="tok-fn">get</span>(<span class="tok-str">'/users/:id'</span>, (req, res) <span class="tok-op">=&gt;</span> {</span>
+<span class="ba-line ba-vuln">  <span class="tok-kw">const</span> query = <span class="tok-str">`SELECT * FROM users WHERE id = ${req.params.id}`</span>;</span>
+<span class="ba-line">  db.<span class="tok-fn">query</span>(query, (err, result) <span class="tok-op">=&gt;</span> {</span>
+<span class="ba-line">    res.<span class="tok-fn">json</span>(result);</span>
 <span class="ba-line">  });</span>
 <span class="ba-line">});</span></code></pre>
+        </div>
       </div>
 
-      <div class="ba-arrow">&rarr;</div>
+      <div class="ba-arrow-col">
+        <div class="ba-arrow-icon">&rarr;</div>
+        <span class="ba-arrow-label">fixed</span>
+      </div>
 
       <div class="ba-panel ba-after">
-        <div class="ba-label">After</div>
-        <pre class="ba-code"><code><span class="ba-line">app.get('/users/:id', (req, res) =&gt; {</span>
-<span class="ba-line ba-fixed">  const query = 'SELECT * FROM users WHERE id = ?';</span>
-<span class="ba-line ba-fixed">  db.query(query, [req.params.id], (err, result) =&gt; {</span>
-<span class="ba-line">    res.json(result);</span>
+        <div class="ba-titlebar">
+          <div class="ba-dots"><span class="ba-dot"></span><span class="ba-dot"></span><span class="ba-dot"></span></div>
+          <span class="ba-filename">routes/users.js</span>
+          <span class="ba-badge">Secure</span>
+        </div>
+        <div class="ba-code-wrap">
+          <div class="ba-linenums"><span class="ba-linenum">12</span><span class="ba-linenum">13</span><span class="ba-linenum">14</span><span class="ba-linenum">15</span><span class="ba-linenum">16</span><span class="ba-linenum">17</span></div>
+          <pre class="ba-code"><code><span class="ba-line"><span class="tok-fn">app</span><span class="tok-op">.</span><span class="tok-fn">get</span>(<span class="tok-str">'/users/:id'</span>, (req, res) <span class="tok-op">=&gt;</span> {</span>
+<span class="ba-line ba-fixed">  <span class="tok-kw">const</span> query = <span class="tok-str">'SELECT * FROM users WHERE id = ?'</span>;</span>
+<span class="ba-line ba-fixed">  db.<span class="tok-fn">query</span>(query, [req.params.id], (err, result) <span class="tok-op">=&gt;</span> {</span>
+<span class="ba-line">    res.<span class="tok-fn">json</span>(result);</span>
 <span class="ba-line">  });</span>
 <span class="ba-line">});</span></code></pre>
+        </div>
       </div>
     </div>
 
-    <p class="ba-caption">SQL injection &rarr; parameterized query. Your variable names, your structure, your style.</p>
+    <p class="ba-caption">Detected via <code>vibecheck --fix</code> &middot; auto-patched with parameterized binding &middot; zero manual edits</p>
   </section>
   <div class="section-divider" aria-hidden="true"></div>
   <section class="install-section section-atmo atmo-install" id="installSection">
