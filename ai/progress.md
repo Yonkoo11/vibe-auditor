@@ -1,10 +1,29 @@
 # Vibe Auditor - Progress Tracker
-Last updated: 2026-02-11
+Last updated: 2026-02-11 (session 2)
 
 ## Current State
 - **Branch**: `master` (vulnerable), `vibecheck-fixed` (fixed + tests)
 - **Pipeline**: audit (53 issues) -> fix (39 fixed) -> test (50 tests) -> re-score (F -> B+)
 - **Dev server**: Python HTTP on port 8080 serving from project root
+- **Repo**: github.com/Yonkoo11/vibe-auditor (renamed from vibe-check)
+- **Local dir**: ~/Projects/vibe-auditor/
+- **GitHub Pages**: https://yonkoo11.github.io/vibe-auditor/
+
+## Rebrand (2026-02-11) - DONE
+- "Vibe Check" → "Vibe Auditor" across 20 files (16 modified + 4 new UX research docs)
+- GitHub repo renamed, remote URL updated, local dir renamed
+- Command stays `/vibecheck` (user's choice)
+- Navbar + footer branding updated to "VIBE AUDITOR"
+
+## Final UX Polish (2026-02-11) - DONE
+- Added "Vibe Score" label above B+ grade
+- Hero min-height 90vh (was 100vh) so bento peeks above fold
+- Social proof line: "Built for the Claude Code Hackathon · Feb 2026 · Open Source"
+- scroll-margin-top on anchor targets (nav doesn't overlap on jump)
+- Mobile verified at 390px — stacks cleanly
+
+## DESIGN COMPLETE
+Landing page is finished. No more design work needed.
 
 ## Proposal 3 (Landing Page)
 - File: `proposals/proposal-3.html`
