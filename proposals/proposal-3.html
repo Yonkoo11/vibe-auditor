@@ -146,149 +146,15 @@
     100% { transform: translate(1px, 1px); }
   }
 
-  /* Fluid morphing blob system */
-  .blob {
+  /* Canvas background */
+  #bgCanvas {
     position: fixed;
-    pointer-events: none;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     z-index: 0;
-    filter: blur(120px);
-    will-change: border-radius, transform;
-  }
-
-  .blob-1 {
-    width: 700px;
-    height: 700px;
-    top: -5%;
-    left: -5%;
-    background: rgba(0, 229, 160, 0.4);
-    animation: blobMorph1 20s ease-in-out infinite;
-  }
-
-  .blob-2 {
-    width: 600px;
-    height: 600px;
-    top: -10%;
-    right: -8%;
-    background: rgba(0, 180, 216, 0.3);
-    animation: blobMorph2 25s ease-in-out infinite;
-  }
-
-  .blob-3 {
-    width: 550px;
-    height: 550px;
-    bottom: 5%;
-    left: 25%;
-    background: rgba(0, 180, 216, 0.3);
-    animation: blobMorph3 22s ease-in-out infinite;
-  }
-
-  .blob-4 {
-    width: 500px;
-    height: 500px;
-    bottom: -5%;
-    left: -8%;
-    background: rgba(240, 192, 64, 0.25);
-    animation: blobMorph4 30s ease-in-out infinite;
-  }
-
-  .blob-5 {
-    width: 450px;
-    height: 450px;
-    top: 35%;
-    left: 30%;
-    background: rgba(240, 192, 64, 0.18);
-    animation: blobMorph5 18s ease-in-out infinite;
-  }
-
-  @keyframes blobMorph1 {
-    0%, 100% {
-      border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-      transform: translate(0, 0) rotate(0deg);
-    }
-    25% {
-      border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
-      transform: translate(50px, -30px) rotate(5deg);
-    }
-    50% {
-      border-radius: 50% 60% 30% 60% / 30% 40% 70% 60%;
-      transform: translate(-20px, 40px) rotate(-3deg);
-    }
-    75% {
-      border-radius: 40% 60% 50% 40% / 60% 30% 60% 40%;
-      transform: translate(30px, 20px) rotate(2deg);
-    }
-  }
-
-  @keyframes blobMorph2 {
-    0%, 100% {
-      border-radius: 40% 60% 60% 40% / 70% 30% 60% 40%;
-      transform: translate(0, 0) rotate(0deg);
-    }
-    20% {
-      border-radius: 70% 30% 50% 50% / 30% 60% 40% 70%;
-      transform: translate(-40px, 25px) rotate(-4deg);
-    }
-    45% {
-      border-radius: 30% 50% 70% 40% / 60% 40% 30% 70%;
-      transform: translate(35px, -45px) rotate(6deg);
-    }
-    70% {
-      border-radius: 55% 45% 35% 65% / 40% 70% 55% 35%;
-      transform: translate(-25px, -15px) rotate(-2deg);
-    }
-  }
-
-  @keyframes blobMorph3 {
-    0%, 100% {
-      border-radius: 50% 50% 40% 60% / 40% 60% 50% 50%;
-      transform: translate(0, 0) rotate(0deg);
-    }
-    30% {
-      border-radius: 35% 65% 55% 45% / 65% 35% 45% 55%;
-      transform: translate(45px, 30px) rotate(3deg);
-    }
-    60% {
-      border-radius: 65% 35% 40% 60% / 35% 55% 65% 45%;
-      transform: translate(-35px, -25px) rotate(-5deg);
-    }
-  }
-
-  @keyframes blobMorph4 {
-    0%, 100% {
-      border-radius: 45% 55% 65% 35% / 55% 45% 35% 65%;
-      transform: translate(0, 0) rotate(0deg);
-    }
-    25% {
-      border-radius: 65% 35% 45% 55% / 35% 65% 55% 45%;
-      transform: translate(30px, -40px) rotate(-3deg);
-    }
-    50% {
-      border-radius: 35% 55% 35% 65% / 65% 35% 65% 35%;
-      transform: translate(-45px, 20px) rotate(4deg);
-    }
-    75% {
-      border-radius: 55% 45% 55% 45% / 45% 55% 45% 55%;
-      transform: translate(20px, 35px) rotate(-2deg);
-    }
-  }
-
-  @keyframes blobMorph5 {
-    0%, 100% {
-      border-radius: 55% 45% 50% 50% / 50% 50% 45% 55%;
-      transform: translate(0, 0) rotate(0deg);
-    }
-    20% {
-      border-radius: 40% 60% 35% 65% / 60% 40% 65% 35%;
-      transform: translate(-30px, -35px) rotate(6deg);
-    }
-    50% {
-      border-radius: 65% 35% 60% 40% / 35% 65% 40% 60%;
-      transform: translate(40px, 25px) rotate(-4deg);
-    }
-    75% {
-      border-radius: 45% 55% 45% 55% / 55% 45% 55% 45%;
-      transform: translate(-20px, 40px) rotate(3deg);
-    }
+    pointer-events: none;
   }
 
   /* Cursor glow - desktop only */
@@ -462,9 +328,10 @@
     .cursor-glow, .flow-line, .hero-beam { display: none; }
     .hero-accent { animation: none; background: var(--primary); -webkit-background-clip: text; }
     .hero-headline, .hero-sub, .hero-ctas, .hero-install, .hero-score { opacity: 1; transform: none; transition: none; }
+    .hero-headline .char { opacity: 1; transform: none; filter: none; transition: none; }
     .section-divider { opacity: 1; transform: scaleX(1); }
     .section-divider::after { animation: none; }
-    .blob { animation: none; }
+    #bgCanvas { display: none; }
     .noise-overlay { animation: none; }
     .section-atmo::before { animation: none; }
   }
@@ -550,8 +417,7 @@
     max-width: 55%;
   }
 
-  /* Hero entrance animation */
-  .hero-headline,
+  /* Hero entrance animation (headline uses per-char animation instead) */
   .hero-sub,
   .hero-ctas,
   .hero-install,
@@ -560,13 +426,44 @@
     transform: translateY(40px);
     transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .hero-headline.entered,
   .hero-sub.entered,
   .hero-ctas.entered,
   .hero-install.entered,
   .hero-score.entered {
     opacity: 1;
     transform: translateY(0);
+  }
+
+  /* Per-character animation */
+  .hero-headline .char {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(0.3em);
+    filter: blur(4px);
+    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                filter 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .hero-headline .char.entered {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+  .hero-headline .accent .char {
+    transform: translateY(0.3em) rotate(-4deg) scale(0.9);
+    background: linear-gradient(135deg, var(--primary), var(--quaternary), var(--tertiary), var(--primary));
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 6s ease infinite;
+  }
+  .hero-headline .accent .char.entered {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+  .hero-headline .char-space {
+    display: inline;
+    width: 0.3em;
   }
 
   .hero-headline {
@@ -1877,7 +1774,7 @@
       opacity: 1;
       transform: none;
     }
-    .blob, .score-card-bloom {
+    .score-card-bloom {
       animation: none;
     }
     .hero-headline .accent {
@@ -2610,11 +2507,7 @@
   <div class="atmosphere" aria-hidden="true"></div>
   <div class="dot-grid" aria-hidden="true"></div>
   <div class="noise-overlay" aria-hidden="true"></div>
-  <div class="blob blob-1" aria-hidden="true"></div>
-  <div class="blob blob-2" aria-hidden="true"></div>
-  <div class="blob blob-3" aria-hidden="true"></div>
-  <div class="blob blob-4" aria-hidden="true"></div>
-  <div class="blob blob-5" aria-hidden="true"></div>
+  <canvas id="bgCanvas" aria-hidden="true"></canvas>
   <div class="flow-line" aria-hidden="true"></div>
   <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
   <div class="hero-beam" aria-hidden="true"></div>
@@ -2964,6 +2857,85 @@
       'use strict';
 
       var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      /* ---------- Scroll velocity tracker ---------- */
+      window._scrollSpeed = 1;
+      function initScrollVelocity() {
+        if (prefersReduced) { window._scrollSpeed = 1; return; }
+        var lastY = window.pageYOffset;
+        var speed = 1;
+        var alpha = 0.15;
+        function loop() {
+          var y = window.pageYOffset;
+          var delta = Math.abs(y - lastY);
+          lastY = y;
+          var raw = Math.min(1 + delta * 0.08, 3);
+          speed = speed * (1 - alpha) + raw * alpha;
+          if (delta === 0) speed = speed * 0.97 + 1 * 0.03;
+          window._scrollSpeed = speed;
+          document.documentElement.style.setProperty('--scroll-speed', speed);
+          requestAnimationFrame(loop);
+        }
+        requestAnimationFrame(loop);
+      }
+
+      /* ---------- Per-character text animation ---------- */
+      function initCharSplit() {
+        var headline = document.querySelector('.hero-headline');
+        if (!headline) return;
+
+        function wrapChars(node) {
+          var frag = document.createDocumentFragment();
+          var children = Array.prototype.slice.call(node.childNodes);
+          children.forEach(function(child) {
+            if (child.nodeType === 3) {
+              // Text node: wrap each character
+              child.textContent.split('').forEach(function(ch) {
+                if (ch === ' ') {
+                  frag.appendChild(document.createTextNode(' '));
+                } else {
+                  var span = document.createElement('span');
+                  span.className = 'char';
+                  span.textContent = ch;
+                  frag.appendChild(span);
+                }
+              });
+            } else if (child.nodeName === 'BR') {
+              frag.appendChild(child.cloneNode());
+            } else if (child.nodeType === 1) {
+              // Element node (like .accent): recurse into it
+              var clone = child.cloneNode(false);
+              clone.appendChild(wrapChars(child));
+              frag.appendChild(clone);
+            }
+          });
+          return frag;
+        }
+
+        headline.innerHTML = '';
+        var original = document.querySelector('.hero-headline');
+        // Re-read from DOM to get the original content
+        // We need to parse the original HTML, so let's use a template approach
+        var temp = document.createElement('div');
+        temp.innerHTML = 'You vibed.<br><span class="accent hero-accent">Now ship.</span>';
+        headline.appendChild(wrapChars(temp));
+
+        // Animate chars in with stagger
+        var chars = headline.querySelectorAll('.char');
+        if (prefersReduced) {
+          chars.forEach(function(c) { c.classList.add('entered'); });
+          return;
+        }
+
+        requestAnimationFrame(function() {
+          requestAnimationFrame(function() {
+            chars.forEach(function(ch, i) {
+              setTimeout(function() { ch.classList.add('entered'); }, 80 + i * 35);
+            });
+          });
+        });
+      }
+
       function animateCounter(el, target, duration) {
         if (prefersReduced) { el.textContent = target; return; }
         var start = performance.now();
@@ -2982,21 +2954,83 @@
         var testsEl = document.getElementById('testsGenerated');
         var gradeFrom = document.getElementById('gradeFrom');
         var gradeTo = document.getElementById('gradeTo');
+        var bloom = document.querySelector('.score-card-bloom-wrap');
+        var hero = document.querySelector('.hero');
+        if (!hero) return;
 
-        setTimeout(function() {
-          if (arcFill) arcFill.classList.add('animated');
-          if (arcGlow) arcGlow.classList.add('animated');
-          animateCounter(issuesEl, 39, 2000);
-          animateCounter(testsEl, 50, 2200);
-        }, 500);
+        var fullDash = 251;
+        var targetDash = 50;
+        var lastProgress = -1;
+        var autoTimer = null;
+        var autoPlaying = false;
+        var autoProgress = 0;
 
-        setTimeout(function() {
-          if (gradeFrom) gradeFrom.classList.add('dimmed');
-        }, 800);
+        function applyProgress(p) {
+          p = Math.max(0, Math.min(1, p));
+          if (Math.abs(p - lastProgress) < 0.005) return;
+          lastProgress = p;
+          var offset = fullDash - (fullDash - targetDash) * p;
+          if (arcFill) arcFill.style.strokeDashoffset = offset;
+          if (arcGlow) arcGlow.style.strokeDashoffset = offset;
+          if (issuesEl) issuesEl.textContent = Math.round(39 * p);
+          if (testsEl) testsEl.textContent = Math.round(50 * p);
+          if (gradeFrom) {
+            if (p > 0.6) { gradeFrom.classList.add('dimmed'); } else { gradeFrom.classList.remove('dimmed'); }
+          }
+          if (gradeTo) {
+            if (p > 0.8) { gradeTo.classList.add('revealed'); } else { gradeTo.classList.remove('revealed'); }
+          }
+          if (bloom) {
+            var s = 1 + 0.2 * p;
+            var o = 0.5 + 0.5 * p;
+            bloom.style.transform = 'translate(-50%, -50%) scale(' + s + ')';
+            bloom.style.opacity = o;
+          }
+        }
 
+        if (prefersReduced) { applyProgress(1); return; }
+
+        // Remove CSS transition on arcs (we drive them directly)
+        if (arcFill) arcFill.style.transition = 'none';
+        if (arcGlow) arcGlow.style.transition = 'none';
+        applyProgress(0);
+
+        function getScrollProgress() {
+          var rect = hero.getBoundingClientRect();
+          var start = window.innerHeight * 0.3;
+          var end = -rect.height * 0.4;
+          var raw = (start - rect.top) / (start - end);
+          return Math.max(0, Math.min(1, raw));
+        }
+
+        function onScroll() {
+          if (autoPlaying) {
+            autoPlaying = false;
+            if (autoTimer) cancelAnimationFrame(autoTimer);
+          }
+          applyProgress(getScrollProgress());
+        }
+
+        window.addEventListener('scroll', function() {
+          requestAnimationFrame(onScroll);
+        }, { passive: true });
+
+        // Auto-play fallback: if no scroll after 3s, animate to 100%
+        var scrolled = false;
+        window.addEventListener('scroll', function() { scrolled = true; }, { passive: true, once: true });
         setTimeout(function() {
-          if (gradeTo) gradeTo.classList.add('revealed');
-        }, 1200);
+          if (scrolled) return;
+          autoPlaying = true;
+          var startTime = performance.now();
+          function autoTick(now) {
+            if (!autoPlaying) return;
+            autoProgress = Math.min((now - startTime) / 2000, 1);
+            var eased = 1 - Math.pow(1 - autoProgress, 3);
+            applyProgress(eased);
+            if (autoProgress < 1) { autoTimer = requestAnimationFrame(autoTick); }
+          }
+          autoTimer = requestAnimationFrame(autoTick);
+        }, 3000);
       }
       // Grid position map for stagger delays (col, row) - 0-indexed
       var tilePositions = {
@@ -3358,7 +3392,8 @@
 
       /* ---------- Hero entrance stagger ---------- */
       function initHeroEntrance() {
-        var els = ['.hero-headline', '.hero-sub', '.hero-ctas', '.hero-install', '.hero-score'];
+        // Headline uses per-char animation, so skip it here. Delay sub to 800ms (after chars finish).
+        var els = ['.hero-sub', '.hero-ctas', '.hero-install', '.hero-score'];
         if (prefersReduced) {
           els.forEach(function(sel) {
             var el = document.querySelector(sel);
@@ -3366,13 +3401,13 @@
           });
           return;
         }
-        // Wait two frames so browser paints the hidden state first
         requestAnimationFrame(function() {
           requestAnimationFrame(function() {
             els.forEach(function(sel, i) {
               var el = document.querySelector(sel);
               if (el) {
-                setTimeout(function() { el.classList.add('entered'); }, 100 + i * 180);
+                // .hero-sub at 800ms, then +180ms each after
+                setTimeout(function() { el.classList.add('entered'); }, 800 + i * 180);
               }
             });
           });
@@ -3418,25 +3453,135 @@
         });
       }
 
-      /* ---------- Scroll-linked blob parallax ---------- */
-      function initOrbParallax() {
-        if (prefersReduced) return;
-        var blobs = document.querySelectorAll('.blob');
-        if (!blobs.length) return;
-        var ticking = false;
-        window.addEventListener('scroll', function() {
-          if (!ticking) {
-            requestAnimationFrame(function() {
-              var y = window.scrollY;
-              blobs.forEach(function(blob, i) {
-                var speed = 0.012 + i * 0.006;
-                blob.style.marginTop = (y * speed) + 'px';
-              });
-              ticking = false;
-            });
-            ticking = true;
-          }
+      /* ---------- Canvas generative background ---------- */
+      function initCanvas() {
+        var canvas = document.getElementById('bgCanvas');
+        if (!canvas || prefersReduced) { if (canvas) canvas.style.display = 'none'; return; }
+        var ctx = canvas.getContext('2d');
+        var w, h, particles = [];
+        var mouseX = -9999, mouseY = -9999;
+        var isMobile = window.innerWidth < 768;
+        var count = isMobile ? 30 : 60;
+        var colors = [
+          { r: 0, g: 229, b: 160 },
+          { r: 0, g: 180, b: 216 },
+          { r: 240, g: 192, b: 64 }
+        ];
+
+        function resize() {
+          w = canvas.width = window.innerWidth;
+          h = canvas.height = window.innerHeight;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        document.addEventListener('mousemove', function(e) {
+          mouseX = e.clientX; mouseY = e.clientY;
         }, { passive: true });
+
+        for (var i = 0; i < count; i++) {
+          var c = colors[i % 3];
+          particles.push({
+            x: Math.random() * w,
+            y: Math.random() * h,
+            r: 80 + Math.random() * 120,
+            vx: (Math.random() - 0.5) * 0.3,
+            vy: (Math.random() - 0.5) * 0.3,
+            alpha: 0.04 + Math.random() * 0.06,
+            color: c
+          });
+        }
+
+        function draw() {
+          ctx.clearRect(0, 0, w, h);
+          var speed = window._scrollSpeed || 1;
+          for (var i = 0; i < particles.length; i++) {
+            var p = particles[i];
+            p.x += p.vx * speed;
+            p.y += p.vy * speed;
+
+            // Mouse repulsion
+            var dx = p.x - mouseX;
+            var dy = p.y - mouseY;
+            var dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 200 && dist > 0) {
+              var force = (200 - dist) / 200 * 0.8;
+              p.x += (dx / dist) * force;
+              p.y += (dy / dist) * force;
+            }
+
+            // Wrap around edges
+            if (p.x < -p.r) p.x = w + p.r;
+            if (p.x > w + p.r) p.x = -p.r;
+            if (p.y < -p.r) p.y = h + p.r;
+            if (p.y > h + p.r) p.y = -p.r;
+
+            var grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
+            grad.addColorStop(0, 'rgba(' + p.color.r + ',' + p.color.g + ',' + p.color.b + ',' + p.alpha + ')');
+            grad.addColorStop(1, 'rgba(' + p.color.r + ',' + p.color.g + ',' + p.color.b + ',0)');
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          requestAnimationFrame(draw);
+        }
+        requestAnimationFrame(draw);
+      }
+
+      /* ---------- Magnetic cursor ---------- */
+      function initMagneticCursor() {
+        if (prefersReduced) return;
+        var isTouch = 'ontouchstart' in window;
+        if (isTouch) return;
+        var targets = document.querySelectorAll('.hero-cta, .hero-cta-secondary, .hero-install-copy, .copy-hint, .nav-links a');
+        if (!targets.length) return;
+
+        var mouseX = 0, mouseY = 0;
+        var radius = 60;
+        var maxPull = 8;
+        var lerp = 0.15;
+
+        var states = [];
+        targets.forEach(function(el) {
+          states.push({ el: el, tx: 0, ty: 0, cx: 0, cy: 0 });
+        });
+
+        document.addEventListener('mousemove', function(e) {
+          mouseX = e.clientX; mouseY = e.clientY;
+        }, { passive: true });
+
+        function tick() {
+          for (var i = 0; i < states.length; i++) {
+            var s = states[i];
+            var rect = s.el.getBoundingClientRect();
+            var cx = rect.left + rect.width / 2;
+            var cy = rect.top + rect.height / 2;
+            var dx = mouseX - cx;
+            var dy = mouseY - cy;
+            var dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < radius) {
+              var pull = (1 - dist / radius) * maxPull;
+              s.tx = (dx / dist) * pull;
+              s.ty = (dy / dist) * pull;
+            } else {
+              s.tx = 0;
+              s.ty = 0;
+            }
+
+            s.cx += (s.tx - s.cx) * lerp;
+            s.cy += (s.ty - s.cy) * lerp;
+
+            if (Math.abs(s.cx) > 0.1 || Math.abs(s.cy) > 0.1) {
+              s.el.style.translate = s.cx + 'px ' + s.cy + 'px';
+            } else if (s.el.style.translate) {
+              s.el.style.translate = '';
+            }
+          }
+          requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
       }
 
       /* ---------- Section divider reveal ---------- */
@@ -3458,7 +3603,11 @@
       }
 
       document.addEventListener('DOMContentLoaded', function() {
+        initScrollVelocity();
+        initCharSplit();
         initScoreCard();
+        initCanvas();
+        initMagneticCursor();
         initTileReveal();
         initTerminal();
         initTestCounter();
@@ -3472,7 +3621,6 @@
         initHeroEntrance();
         initBloomTrack();
         initCursorGlow();
-        initOrbParallax();
         initDividers();
 
         if (prefersReduced) {

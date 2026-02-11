@@ -1,5 +1,5 @@
 # Vibe Check - Progress Tracker
-Last updated: 2026-02-10
+Last updated: 2026-02-11
 
 ## Current State
 - **Branch**: `master` (vulnerable), `vibecheck-fixed` (fixed + tests)
@@ -84,6 +84,16 @@ Last updated: 2026-02-10
 - Score card outer glow boosted (0.25/0.15 vs 0.18/0.10)
 - All 5 blobs, atmosphere layers, tile gradients, dividers updated to new palette
 - Tertiary CSS var changed from #7c5cfc to #f0a030
+
+## Exquisite Animation Upgrade (2026-02-11) - DONE
+All 5 features from plan implemented in proposal-3.html + docs/index.html:
+1. **Scroll Velocity Tracker**: rAF loop, EMA smoothing, --scroll-speed CSS var, window._scrollSpeed
+2. **Per-Character Text Animation**: initCharSplit() wraps hero headline chars in spans, stagger 35ms, blur+translate entrance. Fixed accent gradient by applying background-clip:text to each .char inside .accent.
+3. **Scroll-Linked Score Card**: Rewrote initScoreCard() -- arc/counters/grades driven by scroll position (0-1). Auto-play fallback after 3s. Scroll takes priority over auto-play.
+4. **Canvas Generative Background**: Replaced 5 CSS blob elements + blobMorph keyframes with canvas particle system. 60 particles desktop / 30 mobile, mouse repulsion, scroll-speed modulation.
+5. **Magnetic Cursor**: Buttons pull toward cursor within 60px radius, 8px max, lerp 0.15. Desktop only.
+- Net: +260 JS lines, -163 CSS blob lines = ~+127 lines total
+- Removed: initOrbParallax(), 5 blob HTML elements, 5 blobMorph keyframes, blob CSS
 
 ## Studied - wrapped.abs.xyz
 - Dark background, bold angular typography, massive negative space, single CTA
