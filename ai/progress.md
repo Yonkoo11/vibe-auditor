@@ -53,6 +53,25 @@ Last updated: 2026-02-10
 9. Demo video (need asciinema or screen recording tool)
 10. ~~Deploy landing page (GitHub Pages)~~ DONE -> https://yonkoo11.github.io/vibe-check/
 
+## Design Research Sprint (2026-02-11) - DONE
+- Researched 9 top designers/sources across 7 parallel agents
+- Emil Kowalski (Linear): motion/animation, 7 practical tips, easing curves
+- Rauno Freiberg (Vercel): interaction design, web interface guidelines, depth essay
+- Steve Schoger (Refactoring UI): practical dev-to-designer tips, shadow system, hierarchy
+- Paco Coursey (Linear): minimalist craft, blur techniques, next-themes
+- Shu Ding (Vercel): generative design, Satori, COBE, "good design" philosophy
+- Top UI systems: Linear, Stripe, Apple, Vercel, Erik Kennedy, Dieter Rams
+- Dark UI + motion: Josh Comeau springs, Material Design 3, GSAP, scroll animations
+- Web3/crypto design: Abstract, Zora, Rainbow, Uniswap, Paradigm
+- **Output:** ~/System/guides/DESIGN_MASTERY.md (1,121 lines, organized by topic)
+- **Output:** ai/design-techniques-bible.md (agent-generated reference)
+- **Output:** ai/design-lessons.md (8 lessons learned while building)
+
+## Design Skills Architecture Decision
+- 3 skills: /frontend-design (architect), /ui-revamp (inspector), /state-design (plumber)
+- Decision: DO NOT merge. Keep separate workflows, share knowledge base.
+- Next: integrate DESIGN_MASTERY.md as shared reference into both design skills
+
 ## IN PROGRESS - Score Card Bloom
 - Bloom behind score card still too subtle despite 3 iterations
 - Last values: 600x600px, blur(90px), green 0.8 center, opacity 0.85-1.0 pulse

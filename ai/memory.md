@@ -42,3 +42,10 @@ git commit -m "message" && git push
 - References: Linear, Stripe, Vercel, wrapped.abs.xyz
 - Wants things to feel "alive" - animation, color, movement
 - Gets frustrated by context limits - COMPACT AGGRESSIVELY
+
+## Design Identity (Critical Context)
+- Feedback from Abstract Wrapped team: dev portfolio "feels disconnected" from marketing portfolio/CV
+- Marketing portfolio + CV = more personality, more memorable
+- Dev portfolio = technically clean but could be anyone's work
+- **Goal going forward:** Find and own a personal style. Opinionated > correct. Character > polish.
+- This applies to vibe-check landing page too - it should feel like HIS work, not "nice dark template"
