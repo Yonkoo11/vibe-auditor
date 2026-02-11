@@ -1,5 +1,5 @@
 {
-  "name": "vibe-check",
+  "name": "vibe-auditor",
   "version": "1.0.0",
   "description": "Audit and auto-fix vibe-coded projects. Run /vibecheck to scan for security vulnerabilities, missing auth, hardcoded secrets, and generate a Vibe Score.",
   "author": "yonko",

@@ -1,4 +1,4 @@
-# Vibe Check - Progress Tracker
+# Vibe Auditor - Progress Tracker
 Last updated: 2026-02-11
 
 ## Current State
@@ -51,7 +51,7 @@ Last updated: 2026-02-11
 7. ~~Wire into /vibecheck command~~ DONE (plugin.json, commands/, agents/, skills/, hooks/ all in place)
 8. ~~Numbers synced~~ all landing page + README updated to 39 fixed / 50 tests
 9. Demo video (need asciinema or screen recording tool)
-10. ~~Deploy landing page (GitHub Pages)~~ DONE -> https://yonkoo11.github.io/vibe-check/
+10. ~~Deploy landing page (GitHub Pages)~~ DONE -> https://yonkoo11.github.io/vibe-auditor/
 
 ## Design Research Sprint (2026-02-11) - DONE
 - Researched 9 top designers/sources across 7 parallel agents

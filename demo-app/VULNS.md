@@ -1,6 +1,6 @@
 # Planted Vulnerabilities — Demo App Cheat Sheet
 
-This app has 20 deliberately planted vulnerabilities across all categories. Vibe Check should find and fix most of them.
+This app has 20 deliberately planted vulnerabilities across all categories. Vibe Auditor should find and fix most of them.
 
 ## CRITICAL (5)
 

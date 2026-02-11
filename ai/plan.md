@@ -41,7 +41,7 @@ Reference: ai/design-research.md
 - Prerequisite badges: "Requires Claude Code" | "Node.js" | "Open Source"
 
 ### 6. Footer (NEW)
-- Left: Vibe Check logo + "Built for Claude Code Hackathon, Feb 2026"
+- Left: Vibe Auditor logo + "Built for Claude Code Hackathon, Feb 2026"
 - Center: GitHub | Docs | Plugin Directory | Report Issues
 - Right: "Made by @yonko"
 - Bottom line: "Open source. MIT licensed. Powered by Claude Opus 4.6"

@@ -1,4 +1,4 @@
-# Vibe Check
+# Vibe Auditor
 
 **You vibed. Now ship.**
 
@@ -51,7 +51,7 @@ Vibe coding is exploding. Cursor, Bolt, Lovable, Replit Agent -- everyone builds
 
 ### Vibe Preservation
 
-Vibe Check is vibe coding's ally, not its critic. It fixes the SQL injection, not your naming conventions.
+Vibe Auditor is vibe coding's ally, not its critic. It fixes the SQL injection, not your naming conventions.
 
 - Variable names stay exactly as they are (even `yolo` and `doTheThing`)
 - File structure unchanged
@@ -80,7 +80,7 @@ Included demo app with **20 planted vulnerabilities** across all severity levels
 ## Architecture
 
 ```
-vibe-check/
+vibe-auditor/
 ├── .claude-plugin/
 │   ├── plugin.json           # Plugin manifest
 │   └── hooks/
@@ -138,10 +138,10 @@ Pre-edit hook that blocks Claude from writing hardcoded secrets into code. Catch
 
 ```bash
 # Clone the plugin into your project
-git clone https://github.com/yonkoo11/vibe-check.git
-cp -r vibe-check/.claude-plugin your-project/
-cp -r vibe-check/commands your-project/.claude-plugin/
-cp -r vibe-check/agents your-project/.claude-plugin/
+git clone https://github.com/yonkoo11/vibe-auditor.git
+cp -r vibe-auditor/.claude-plugin your-project/
+cp -r vibe-auditor/commands your-project/.claude-plugin/
+cp -r vibe-auditor/agents your-project/.claude-plugin/
 
 # Then in Claude Code:
 /vibecheck --fix
@@ -151,7 +151,7 @@ cp -r vibe-check/agents your-project/.claude-plugin/
 
 Every vibe-coded app ships with the same bugs: hardcoded Stripe keys, SQL injection in search, admin routes without auth, zero tests. Developers pay $5-15K to have humans clean this up manually.
 
-Vibe Check automates 80% of that cleanup in seconds, inside the tool people are already using to vibe code. The remaining 20% (architecture, business logic) benefits from the report.
+Vibe Auditor automates 80% of that cleanup in seconds, inside the tool people are already using to vibe code. The remaining 20% (architecture, business logic) benefits from the report.
 
 ---
 

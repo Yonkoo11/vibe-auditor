@@ -1,4 +1,4 @@
-# Vibe Check — Product Requirements Document
+# Vibe Auditor — Product Requirements Document
 
 **One-liner:** A Claude Code plugin that audits and auto-fixes vibe-coded projects, turning prototypes into production-ready software with a single command.
 
@@ -25,7 +25,7 @@ The gap: **No automated tool exists that audits AND fixes vibe-coded projects na
 
 ## Design Principles
 
-1. **Fix, don't rewrite. (Vibe Preservation)** Vibe Check is vibe coding's ally, not its critic. We harden code without changing its character. The user should look at the diff and recognize their own code.
+1. **Fix, don't rewrite. (Vibe Preservation)** Vibe Auditor is vibe coding's ally, not its critic. We harden code without changing its character. The user should look at the diff and recognize their own code.
 
    **Preserve:**
    - Variable/function names (even quirky ones like `yolo` or `doTheThing`)
@@ -68,7 +68,7 @@ Everything else gets a **generic scan** (secrets, obvious injection, missing tes
 
 ## The Solution
 
-**Vibe Check** is a Claude Code plugin with two modes:
+**Vibe Auditor** is a Claude Code plugin with two modes:
 
 ### Mode 1: `/vibecheck` (Ship Mode)
 Run once when you're ready to ship. Full autonomous audit + fix pipeline.
@@ -76,7 +76,7 @@ Run once when you're ready to ship. Full autonomous audit + fix pipeline.
 ```
 > /vibecheck
 
-Vibe Check v1.0 — Scanning your project...
+Vibe Auditor v1.0 — Scanning your project...
 
 [Security]     ████████████ Scanning for vulns...
 [Tests]        ████████████ Generating test coverage...
@@ -150,7 +150,7 @@ Companies are paying $5-15K for manual vibe code cleanup. This automates 80% of 
 
 ### Plugin Structure
 ```
-vibe-check/
+vibe-auditor/
 ├── .claude-plugin/
 │   └── plugin.json          # Plugin manifest
 ├── commands/
@@ -272,16 +272,16 @@ Based on real-world vibe coding failure data:
 ## Key Differentiators
 
 ### vs. ESLint/SonarQube/Semgrep
-Those tools **report**. Vibe Check **fixes**. And it understands context — it knows why the code was written this way because it can reason about intent, not just pattern match.
+Those tools **report**. Vibe Auditor **fixes**. And it understands context — it knows why the code was written this way because it can reason about intent, not just pattern match.
 
 ### vs. Human cleanup services ($5-15K)
-Vibe Check runs in seconds, costs nothing, and handles the 80% of issues that are mechanical. The remaining 20% (architecture, business logic) still benefits from the report.
+Vibe Auditor runs in seconds, costs nothing, and handles the 80% of issues that are mechanical. The remaining 20% (architecture, business logic) still benefits from the report.
 
 ### vs. GitHub Copilot code review
-Copilot reviews PRs. Vibe Check audits entire projects holistically, generates tests, and auto-fixes. Different scope entirely.
+Copilot reviews PRs. Vibe Auditor audits entire projects holistically, generates tests, and auto-fixes. Different scope entirely.
 
 ### vs. Cursor's built-in linting
-Cursor helps you write code. Vibe Check helps you ship code. Different phase of the lifecycle.
+Cursor helps you write code. Vibe Auditor helps you ship code. Different phase of the lifecycle.
 
 ---
 
@@ -345,7 +345,7 @@ Without these, there's no demo. Everything else is bonus.
 
 **Demo app:** Pre-built flawed e-commerce/todo app with planted vulns (hardcoded Stripe key, SQL injection in search, missing auth on admin routes, zero tests). Built beforehand — never rely on finding a good repo during the demo.
 
-1. **Open** (10s): "Everyone's vibe coding. But 45% of that code has security flaws. Meet Vibe Check."
+1. **Open** (10s): "Everyone's vibe coding. But 45% of that code has security flaws. Meet Vibe Auditor."
 
 2. **Before** (20s): Show the app running in browser. "Looks fine, right?" Quick flash of the code — hardcoded API key visible in source.
 
@@ -355,7 +355,7 @@ Without these, there's no demo. Everything else is bonus.
 
 5. **After** (30s): New Vibe Score: **B+**. Show the diff — surgical changes, code still looks like theirs. App still works. Open the HTML report card.
 
-6. **Close** (10s): "Vibe code fast. Ship with confidence. Vibe Check — a Claude Code plugin."
+6. **Close** (10s): "Vibe code fast. Ship with confidence. Vibe Auditor — a Claude Code plugin."
 
 ---
 
@@ -380,7 +380,7 @@ Without these, there's no demo. Everything else is bonus.
 
 1. **Open source the plugin** — Make it the standard vibe coding safety net
 2. **Framework-specific modules** — Deep patterns for Next.js, Django, Rails, FastAPI, SvelteKit
-3. **CI/CD integration** — Run Vibe Check on every PR via GitHub Actions
+3. **CI/CD integration** — Run Vibe Auditor on every PR via GitHub Actions
 4. **Vibe Score badge** — Embeddable badge for READMEs (like code coverage badges)
 5. **Leaderboard** — Anonymous aggregate scores showing the state of vibe-coded software
 6. **IDE extension** — VS Code extension that shows Vibe Score in the status bar

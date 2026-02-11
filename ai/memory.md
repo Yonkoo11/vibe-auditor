@@ -1,9 +1,9 @@
-# Vibe Check - Memory (Persistent Context)
+# Vibe Auditor - Memory (Persistent Context)
 
 ## Project
-- **What:** Landing page for "vibe check" - a security audit CLI tool
-- **URL:** https://yonkoo11.github.io/vibe-check/
-- **Repo:** github.com/Yonkoo11/vibe-check, branch `vibecheck-fixed`
+- **What:** Landing page for "vibe auditor" - a security audit CLI tool
+- **URL:** https://yonkoo11.github.io/vibe-auditor/
+- **Repo:** github.com/Yonkoo11/vibe-auditor, branch `vibecheck-fixed`
 - **File:** `proposals/proposal-3.html` (single-file landing page, also copied to `docs/index.html` for GitHub Pages)
 - **Dev server:** `python3 -m http.server 8080` from project root
 
@@ -48,4 +48,4 @@ git commit -m "message" && git push
 - Marketing portfolio + CV = more personality, more memorable
 - Dev portfolio = technically clean but could be anyone's work
 - **Goal going forward:** Find and own a personal style. Opinionated > correct. Character > polish.
-- This applies to vibe-check landing page too - it should feel like HIS work, not "nice dark template"
+- This applies to vibe-auditor landing page too - it should feel like HIS work, not "nice dark template"

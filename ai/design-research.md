@@ -1,4 +1,4 @@
-# Vibe Check - Landing Page Design Research
+# Vibe Auditor - Landing Page Design Research
 
 **Date:** 2026-02-10
 **Scope:** 8 competitor landing pages + broader SaaS/devtool trends research
@@ -289,7 +289,7 @@ Each card should have a subtle background (slightly lighter than the page bg), r
 ### Footer
 **Current:** Minimal or missing.
 **Recommended addition:**
-- Left: Vibe Check logo + "Built for the Claude Code Hackathon, Feb 2026" + "Powered by Claude Opus 4.6"
+- Left: Vibe Auditor logo + "Built for the Claude Code Hackathon, Feb 2026" + "Powered by Claude Opus 4.6"
 - Center: Links (GitHub, Docs, Plugin Directory, Report Issues)
 - Right: "Made by @yonko" + social links
 - Status line at very bottom: "Open source. MIT licensed."

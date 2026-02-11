@@ -1,4 +1,4 @@
-# Vibe Check Skill
+# Vibe Auditor Skill
 
 This skill auto-activates when the user mentions auditing, checking, or fixing vibe-coded projects.
 
@@ -9,7 +9,7 @@ This skill auto-activates when the user mentions auditing, checking, or fixing v
 - "find vulnerabilities"
 - "hardcoded secrets"
 - "missing auth"
-- "vibe check"
+- "vibe auditor"
 - "make this production ready"
 
 ## When activated
