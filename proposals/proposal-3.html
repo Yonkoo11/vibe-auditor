@@ -4,7 +4,8 @@
 <!-- DNA-B-T-S-V-C | Proposal 3 v2 -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vibe Check — Audit & Auto-Fix Your Vibe-Coded Projects</title>
+<title>Vibe Check -- Audit & Auto-Fix Your Vibe-Coded Projects</title>
+<meta name="description" content="A Claude Code plugin that audits your AI-generated code and auto-fixes security flaws, missing auth, and hardcoded secrets in one command.">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
   *, *::before, *::after {
@@ -22,8 +23,8 @@
     --primary-dim: rgba(0, 229, 160, 0.15);
     --secondary: #ff6b35;
     --secondary-dim: rgba(255, 107, 53, 0.15);
-    --tertiary: #7c5cfc;
-    --tertiary-dim: rgba(124, 92, 252, 0.15);
+    --tertiary: #f0a030;
+    --tertiary-dim: rgba(240, 160, 48, 0.15);
     --quaternary: #00b4d8;
     --quaternary-dim: rgba(0, 180, 216, 0.15);
     --gold: #f0c040;
@@ -110,7 +111,7 @@
     right: -10%;
     width: 60%;
     height: 60%;
-    background: radial-gradient(ellipse at center, rgba(124, 92, 252, 0.15) 0%, rgba(124, 92, 252, 0.08) 40%, transparent 70%);
+    background: radial-gradient(ellipse at center, rgba(0, 180, 216, 0.12) 0%, rgba(0, 229, 160, 0.06) 40%, transparent 70%);
     filter: blur(80px);
   }
 
@@ -168,7 +169,7 @@
     height: 600px;
     top: -10%;
     right: -8%;
-    background: rgba(124, 92, 252, 0.35);
+    background: rgba(0, 180, 216, 0.3);
     animation: blobMorph2 25s ease-in-out infinite;
   }
 
@@ -195,7 +196,7 @@
     height: 450px;
     top: 35%;
     left: 30%;
-    background: rgba(200, 80, 200, 0.2);
+    background: rgba(240, 192, 64, 0.18);
     animation: blobMorph5 18s ease-in-out infinite;
   }
 
@@ -308,7 +309,7 @@
   /* Section divider */
   .section-divider {
     height: 1px;
-    background: linear-gradient(90deg, transparent 5%, rgba(0,229,160,0.5) 30%, rgba(124,92,252,0.5) 70%, transparent 95%);
+    background: linear-gradient(90deg, transparent 5%, rgba(0,229,160,0.5) 30%, rgba(0,180,216,0.5) 70%, transparent 95%);
     margin: 0 auto;
     max-width: 800px;
     opacity: 0;
@@ -347,7 +348,7 @@
       transparent 0%,
       rgba(0, 229, 160, 0.6) 15%,
       rgba(0, 180, 216, 0.45) 35%,
-      rgba(124, 92, 252, 0.5) 55%,
+      rgba(240, 160, 48, 0.5) 55%,
       rgba(240, 192, 64, 0.35) 75%,
       rgba(0, 229, 160, 0.45) 90%,
       transparent 100%
@@ -374,7 +375,7 @@
     transform: translateX(-50%);
     width: 600px;
     height: 800px;
-    background: conic-gradient(from 0deg at 50% 0%, transparent 40%, rgba(0, 229, 160, 0.06) 45%, rgba(0, 180, 216, 0.04) 50%, rgba(124, 92, 252, 0.06) 55%, transparent 60%);
+    background: conic-gradient(from 0deg at 50% 0%, transparent 40%, rgba(0, 229, 160, 0.06) 45%, rgba(0, 180, 216, 0.04) 50%, rgba(240, 160, 48, 0.06) 55%, transparent 60%);
     pointer-events: none;
     z-index: 0;
     filter: blur(40px);
@@ -382,31 +383,15 @@
     -webkit-mask-image: linear-gradient(180deg, black, transparent);
   }
 
-  /* Scroll-triggered section reveals */
-  .reveal {
-    opacity: 0;
-    transform: translateY(30px) scale(0.97);
-    transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
-    will-change: transform, opacity;
-  }
-  .reveal.visible {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-
   /* Hero accent gradient animation */
   .hero-accent {
-    background: linear-gradient(90deg, #00e5a0, #00b4d8, #7c5cfc, #00e5a0);
+    background: linear-gradient(90deg, #00e5a0, #00b4d8, #f0a030, #00e5a0);
     background-size: 300% 100%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     animation: gradientShift 6s ease-in-out infinite;
     filter: drop-shadow(0 0 40px rgba(0, 229, 160, 0.3));
-  }
-  @keyframes gradientShift {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
   }
 
   /* Section color atmosphere overlays */
@@ -431,11 +416,11 @@
   .atmo-hero::before {
     background:
       radial-gradient(ellipse 80% 60% at 15% 80%, rgba(0, 229, 160, 0.20) 0%, transparent 55%),
-      radial-gradient(ellipse 60% 50% at 85% 15%, rgba(124, 92, 252, 0.15) 0%, transparent 55%);
+      radial-gradient(ellipse 60% 50% at 85% 15%, rgba(240, 160, 48, 0.15) 0%, transparent 55%);
   }
   .atmo-bento::before {
     background:
-      radial-gradient(ellipse 70% 60% at 80% 15%, rgba(124, 92, 252, 0.18) 0%, transparent 55%),
+      radial-gradient(ellipse 70% 60% at 80% 15%, rgba(240, 160, 48, 0.18) 0%, transparent 55%),
       radial-gradient(ellipse 60% 45% at 10% 70%, rgba(0, 180, 216, 0.12) 0%, transparent 55%);
   }
   .atmo-compare::before {
@@ -475,8 +460,8 @@
   /* Reduced motion */
   @media (prefers-reduced-motion: reduce) {
     .cursor-glow, .flow-line, .hero-beam { display: none; }
-    .reveal { opacity: 1; transform: none; }
     .hero-accent { animation: none; background: var(--primary); -webkit-background-clip: text; }
+    .hero-headline, .hero-sub, .hero-ctas, .hero-install, .hero-score { opacity: 1; transform: none; transition: none; }
     .section-divider { opacity: 1; transform: scaleX(1); }
     .section-divider::after { animation: none; }
     .blob { animation: none; }
@@ -550,19 +535,6 @@
     transition: width 0.3s var(--ease);
   }
 
-  .dna-badge {
-    position: fixed;
-    top: 80px;
-    right: 20px;
-    z-index: 99;
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    color: var(--muted);
-    letter-spacing: 0.05em;
-    writing-mode: vertical-rl;
-    opacity: 0.4;
-    user-select: none;
-  }
   .hero {
     display: flex;
     align-items: center;
@@ -576,6 +548,25 @@
   .hero-text {
     flex: 0 0 55%;
     max-width: 55%;
+  }
+
+  /* Hero entrance animation */
+  .hero-headline,
+  .hero-sub,
+  .hero-ctas,
+  .hero-install,
+  .hero-score {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .hero-headline.entered,
+  .hero-sub.entered,
+  .hero-ctas.entered,
+  .hero-install.entered,
+  .hero-score.entered {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   .hero-headline {
@@ -775,37 +766,46 @@
     position: relative;
   }
 
-  .score-card-bloom {
+  .score-card-bloom-wrap {
     position: absolute;
-    width: 800px;
-    height: 800px;
+    width: 900px;
+    height: 900px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background:
-      radial-gradient(circle, rgba(0, 229, 160, 0.35) 0%, transparent 45%),
-      radial-gradient(circle, rgba(124, 92, 252, 0.25) 30%, transparent 70%);
-    filter: blur(70px);
     pointer-events: none;
     animation: bloomPulse 4s ease-in-out infinite;
   }
 
+  .score-card-bloom {
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(0, 229, 160, 1) 0%, rgba(0, 229, 160, 0.7) 25%, rgba(0, 180, 216, 0.4) 45%, transparent 70%);
+    filter: blur(70px);
+    pointer-events: none;
+    transition: transform 0.3s ease-out;
+  }
+
   @keyframes bloomPulse {
-    0%, 100% { opacity: 0.75; transform: translate(-50%, -50%) scale(1); }
+    0%, 100% { opacity: 0.9; transform: translate(-50%, -50%) scale(1); }
     50% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
   }
 
   .score-card {
     width: 400px;
-    background: var(--glass-bg);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid var(--glass-border);
+    background: rgba(12, 12, 22, 0.55);
+    backdrop-filter: blur(20px) saturate(1.3);
+    -webkit-backdrop-filter: blur(20px) saturate(1.3);
+    border: 1px solid rgba(255, 255, 255, 0.10);
     border-radius: 16px;
     padding: 36px 32px 32px;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 4px 60px rgba(0, 0, 0, 0.3), 0 0 120px rgba(0, 229, 160, 0.12), 0 0 200px rgba(0, 229, 160, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    box-shadow:
+      0 4px 60px rgba(0, 0, 0, 0.4),
+      0 0 80px rgba(0, 229, 160, 0.25),
+      0 0 160px rgba(0, 229, 160, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
   }
 
   .score-card::before {
@@ -814,7 +814,7 @@
     inset: -1px;
     border-radius: 16px;
     padding: 1.5px;
-    background: conic-gradient(from var(--border-angle, 0deg), rgba(0,229,160,0.4), rgba(0,180,216,0.2), rgba(124,92,252,0.3), rgba(240,192,64,0.15), rgba(0,229,160,0.4));
+    background: conic-gradient(from var(--border-angle, 0deg), rgba(0,229,160,0.5), rgba(0,180,216,0.25), rgba(240,192,64,0.2), rgba(0,180,216,0.25), rgba(0,229,160,0.5));
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
@@ -1065,7 +1065,7 @@
     inset: -1px;
     border-radius: var(--tile-radius);
     padding: 1px;
-    background: conic-gradient(from var(--border-angle, 0deg), rgba(255,255,255,0.06), rgba(0,229,160,0.15), rgba(255,255,255,0.04), rgba(124,92,252,0.12), rgba(255,255,255,0.06));
+    background: conic-gradient(from var(--border-angle, 0deg), rgba(255,255,255,0.06), rgba(0,229,160,0.15), rgba(255,255,255,0.04), rgba(240,160,48,0.12), rgba(255,255,255,0.06));
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
@@ -1231,17 +1231,17 @@
   }
   .tile-security {
     grid-area: security;
-    --tile-gradient: linear-gradient(160deg, rgba(124,92,252,0.35), rgba(124,92,252,0.1) 50%, transparent 80%);
-    --tile-ambient: radial-gradient(ellipse at top left, rgba(124,92,252,0.04), transparent 70%);
-    --tile-hover-shadow: 0 0 60px rgba(124, 92, 252, 0.1);
-    border-left: 2px solid rgba(124, 92, 252, 0.5);
+    --tile-gradient: linear-gradient(160deg, rgba(240,160,48,0.35), rgba(240,160,48,0.1) 50%, transparent 80%);
+    --tile-ambient: radial-gradient(ellipse at top left, rgba(240,160,48,0.04), transparent 70%);
+    --tile-hover-shadow: 0 0 60px rgba(240, 160, 48, 0.1);
+    border-left: 2px solid rgba(240, 160, 48, 0.5);
     background:
       repeating-linear-gradient(
         -45deg,
         transparent,
         transparent 10px,
-        rgba(124, 92, 252, 0.02) 10px,
-        rgba(124, 92, 252, 0.02) 20px
+        rgba(240, 160, 48, 0.02) 10px,
+        rgba(240, 160, 48, 0.02) 20px
       ),
       var(--glass-bg);
   }
@@ -1597,7 +1597,7 @@
   }
   .tile-vibe {
     grid-area: vibe;
-    --tile-gradient: linear-gradient(160deg, rgba(0,229,160,0.2), rgba(124,92,252,0.15) 50%, transparent 80%);
+    --tile-gradient: linear-gradient(160deg, rgba(0,229,160,0.2), rgba(0,180,216,0.15) 50%, transparent 80%);
     --tile-ambient: radial-gradient(ellipse at top left, rgba(0,229,160,0.03), transparent 70%);
     --tile-hover-shadow: 0 0 60px rgba(0, 229, 160, 0.06);
   }
@@ -1769,7 +1769,7 @@
     .tile-demo:hover { transform: translateY(-3px); }
 
     .tile-security:hover {
-      border-color: rgba(124, 92, 252, 0.8);
+      border-color: rgba(240, 160, 48, 0.8);
       box-shadow:
         inset 0 0 60px rgba(255,255,255,0.03),
         0 8px 40px rgba(0, 0, 0, 0.4),
@@ -1813,7 +1813,7 @@
       box-shadow:
         inset 0 0 60px rgba(255,255,255,0.03),
         0 8px 40px rgba(0, 0, 0, 0.4),
-        0 0 100px rgba(124, 92, 252, 0.12);
+        0 0 100px rgba(240, 160, 48, 0.12);
     }
 
     .tile-install:hover {
@@ -1982,10 +1982,6 @@
       transform: translateY(30px) scale(0.96);
     }
 
-    .dna-badge {
-      display: none;
-    }
-
     .score-card-bloom {
       width: 300px;
       height: 300px;
@@ -2104,8 +2100,8 @@
     box-shadow: 0 4px 30px rgba(0,0,0,0.3), 0 0 80px rgba(0, 229, 160, 0.08), inset 0 1px 0 rgba(255,255,255,0.05);
   }
   .tile-vibe {
-    --tile-glow: rgba(124, 92, 252, 0.12);
-    box-shadow: 0 4px 30px rgba(0,0,0,0.3), 0 0 80px rgba(124, 92, 252, 0.07), inset 0 1px 0 rgba(255,255,255,0.05);
+    --tile-glow: rgba(240, 160, 48, 0.12);
+    box-shadow: 0 4px 30px rgba(0,0,0,0.3), 0 0 80px rgba(240, 160, 48, 0.07), inset 0 1px 0 rgba(255,255,255,0.05);
   }
   .tile-install {
     --tile-glow: rgba(0, 229, 160, 0.10);
@@ -2379,7 +2375,7 @@
     font-size: 1.2rem;
     color: var(--primary);
     box-shadow: 0 0 30px rgba(0, 229, 160, 0.15);
-    animation: arrowPulse 3s ease-in-out infinite;
+    animation: baArrowGlow 3s ease-in-out infinite;
   }
   .ba-arrow-label {
     font-family: var(--font-mono);
@@ -2389,7 +2385,7 @@
     letter-spacing: 0.1em;
     opacity: 0.7;
   }
-  @keyframes arrowPulse {
+  @keyframes baArrowGlow {
     0%, 100% { box-shadow: 0 0 20px rgba(0, 229, 160, 0.10); }
     50% { box-shadow: 0 0 40px rgba(0, 229, 160, 0.25); }
   }
@@ -2632,8 +2628,6 @@
     </ul>
   </nav>
 
-  <!-- DNA Badge -->
-  <div class="dna-badge" aria-hidden="true">DNA-B-T-S-V-C</div>
   <section class="hero section-atmo atmo-hero">
     <div class="hero-text">
       <h1 class="hero-headline">
@@ -2645,13 +2639,13 @@
       <div class="hero-ctas">
         <a href="#demo" class="hero-cta">
           See it work
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
             <path d="M8 3v10M4 9l4 4 4-4"/>
           </svg>
         </a>
-        <a href="https://github.com" class="hero-cta-secondary" target="_blank" rel="noopener">
+        <a href="https://github.com/Yonkoo11/vibe-check" class="hero-cta-secondary" target="_blank" rel="noopener">
           View on GitHub
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M6 3h7v7M13 3L6 10"/>
           </svg>
         </a>
@@ -2663,7 +2657,7 @@
     </div>
 
     <div class="hero-score">
-      <div class="score-card-bloom" aria-hidden="true"></div>
+      <div class="score-card-bloom-wrap" aria-hidden="true"><div class="score-card-bloom"></div></div>
       <div class="score-card">
         <div class="score-card-header">// vibe score</div>
 
@@ -2874,7 +2868,7 @@
   <div class="section-divider" aria-hidden="true"></div>
   <section class="before-after section-atmo atmo-compare" id="beforeAfter">
     <h2 class="ba-headline">See the fix.</h2>
-    <p class="ba-subtitle"><strong>SQL injection</strong> becomes a <span class="ba-sub-fixed">parameterized query</span> &mdash; your code, your style, zero breakage.</p>
+    <p class="ba-subtitle"><strong>SQL injection</strong> becomes a <span class="ba-sub-fixed">parameterized query</span> -- your code, your style, zero breakage.</p>
 
     <div class="ba-container">
       <div class="ba-panel ba-before">
@@ -2950,10 +2944,10 @@
         <p class="footer-tagline">Built for Claude Code Hackathon | Feb 2026</p>
       </div>
       <div class="footer-links">
-        <a href="https://github.com" class="footer-link">GitHub</a>
-        <a href="#" class="footer-link">Docs</a>
-        <a href="#" class="footer-link">Plugin Directory</a>
-        <a href="#" class="footer-link">Report Issues</a>
+        <a href="https://github.com/Yonkoo11/vibe-check" class="footer-link">GitHub</a>
+        <a href="https://github.com/Yonkoo11/vibe-check#readme" class="footer-link">Docs</a>
+        <a href="https://github.com/Yonkoo11/vibe-check" class="footer-link">Plugin Directory</a>
+        <a href="https://github.com/Yonkoo11/vibe-check/issues" class="footer-link">Report Issues</a>
       </div>
       <div class="footer-right">
         <p class="footer-credit">Made by @yonko</p>
@@ -3362,6 +3356,51 @@
         sections.forEach(function(s) { observer.observe(s.el); });
       }
 
+      /* ---------- Hero entrance stagger ---------- */
+      function initHeroEntrance() {
+        var els = ['.hero-headline', '.hero-sub', '.hero-ctas', '.hero-install', '.hero-score'];
+        if (prefersReduced) {
+          els.forEach(function(sel) {
+            var el = document.querySelector(sel);
+            if (el) el.classList.add('entered');
+          });
+          return;
+        }
+        // Wait two frames so browser paints the hidden state first
+        requestAnimationFrame(function() {
+          requestAnimationFrame(function() {
+            els.forEach(function(sel, i) {
+              var el = document.querySelector(sel);
+              if (el) {
+                setTimeout(function() { el.classList.add('entered'); }, 100 + i * 180);
+              }
+            });
+          });
+        });
+      }
+
+      /* ---------- Mouse-reactive bloom ---------- */
+      function initBloomTrack() {
+        if (prefersReduced) return;
+        var bloom = document.querySelector('.score-card-bloom');
+        var heroScore = document.querySelector('.hero-score');
+        if (!bloom || !heroScore) return;
+        var isTouch = 'ontouchstart' in window;
+        if (isTouch) return;
+
+        document.addEventListener('mousemove', function(e) {
+          var rect = heroScore.getBoundingClientRect();
+          var cx = rect.left + rect.width / 2;
+          var cy = rect.top + rect.height / 2;
+          var dx = (e.clientX - cx) / rect.width;
+          var dy = (e.clientY - cy) / rect.height;
+          // Clamp movement to 30px max offset
+          var ox = Math.max(-1, Math.min(1, dx)) * 30;
+          var oy = Math.max(-1, Math.min(1, dy)) * 30;
+          bloom.style.transform = 'translate(calc(-50% + ' + ox + 'px), calc(-50% + ' + oy + 'px))';
+        }, { passive: true });
+      }
+
       /* ---------- Cursor glow (desktop only) ---------- */
       function initCursorGlow() {
         if (prefersReduced) return;
@@ -3384,12 +3423,19 @@
         if (prefersReduced) return;
         var blobs = document.querySelectorAll('.blob');
         if (!blobs.length) return;
+        var ticking = false;
         window.addEventListener('scroll', function() {
-          var y = window.scrollY;
-          blobs.forEach(function(blob, i) {
-            var speed = 0.012 + i * 0.006;
-            blob.style.transform = 'translateY(' + (y * speed) + 'px)';
-          });
+          if (!ticking) {
+            requestAnimationFrame(function() {
+              var y = window.scrollY;
+              blobs.forEach(function(blob, i) {
+                var speed = 0.012 + i * 0.006;
+                blob.style.marginTop = (y * speed) + 'px';
+              });
+              ticking = false;
+            });
+            ticking = true;
+          }
         }, { passive: true });
       }
 
@@ -3423,6 +3469,8 @@
         initNavTracking();
         initBeforeAfter();
         initInstallSection();
+        initHeroEntrance();
+        initBloomTrack();
         initCursorGlow();
         initOrbParallax();
         initDividers();

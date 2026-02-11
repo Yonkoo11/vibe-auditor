@@ -72,17 +72,23 @@ Last updated: 2026-02-10
 - Decision: DO NOT merge. Keep separate workflows, share knowledge base.
 - Next: integrate DESIGN_MASTERY.md as shared reference into both design skills
 
-## IN PROGRESS - Score Card Bloom
-- Bloom behind score card still too subtle despite 3 iterations
-- Last values: 600x600px, blur(90px), green 0.8 center, opacity 0.85-1.0 pulse
-- Card glass: rgba(12,12,22,0.55), blur(20px) saturate(1.3)
-- Need to study wrapped.abs.xyz for inspiration on making things feel alive
-- User wants the WHOLE page to feel alive like wrapped.abs.xyz
+## DONE - Score Card Bloom + Kill Purple + Alive (2026-02-11)
+- Purged ALL purple (rgba(124,92,252), #7c5cfc) from entire page - zero remaining
+- Replaced with amber (#f0a030/rgba(240,160,48)) and cyan (rgba(0,180,216))
+- Palette now: green/cyan/amber/gold only. No AI slop purple-blue gradients.
+- Bloom: 900x900px, blur(70px), green center -> cyan mid -> transparent, 4s pulse
+- Split bloom into wrapper (scale/opacity pulse) + inner (mouse-reactive translate)
+- Mouse-reactive bloom: inner div shifts up to 30px toward cursor position
+- Hero entrance: staggered fade-up animation (headline -> sub -> CTAs -> install -> score card)
+- Double-rAF trick ensures browser paints hidden state before triggering animation
+- Score card outer glow boosted (0.25/0.15 vs 0.18/0.10)
+- All 5 blobs, atmosphere layers, tile gradients, dividers updated to new palette
+- Tertiary CSS var changed from #7c5cfc to #f0a030
 
-## IN PROGRESS - Study wrapped.abs.xyz
-- User shared https://wrapped.abs.xyz/ as design reference
-- "each character was carefully placed and came fully alive"
-- Need to analyze their techniques and apply to our page
+## Studied - wrapped.abs.xyz
+- Dark background, bold angular typography, massive negative space, single CTA
+- Confident, minimal, expressive entrance animations
+- Applied: staggered hero entrance, mouse-reactive bloom, boosted glow
 
 ## Fluid Blob Background (2026-02-10) - DONE
 - Replaced static gradient-mesh + orbs with 5 animated morphing blobs
