@@ -8,7 +8,7 @@
 - **Dev server:** `python3 -m http.server 8080` from project root
 
 ## Design System
-- **Base:** Dark (#060612), glass panels, green (#00E5A0) primary, purple (#7C5CFC) secondary
+- **Base:** Dark (#060612), glass panels, green (#00E5A0) primary, amber (#f0a030) tertiary. NO purple.
 - **Fonts:** display (Space Grotesk), body (Inter), mono (JetBrains Mono)
 - **Background:** 5 animated morphing blobs (450-700px, blur 120px, rgba 0.2-0.4)
   - NO mix-blend-mode: screen (causes whiteout)
@@ -24,9 +24,13 @@
 - Score card: animated arc, grade transition F->B+, bloom behind card
 
 ## Active Issues
-- Score card bloom still too subtle (was iterating on opacity/size when context hit)
-- User wants to study https://wrapped.abs.xyz/ design for inspiration
-- User wants design lessons taught during build (file: ai/design-lessons.md)
+- NONE -- design is complete
+
+## Key Decisions (2026-02-12)
+- Rebranded from "Vibe Check" to "Vibe Auditor"
+- Command stays `/vibecheck` (shorter, catchier)
+- Dark-only mode (no light mode -- dev tool audience, dark IS the identity)
+- Color mode decision rule added to /design skill Phase 0
 
 ## Deploy Flow
 ```bash
