@@ -50,10 +50,33 @@ Last updated: 2026-02-10
 6. ~~Terminal formatting~~ DONE (defined in vibecheck.md command)
 7. ~~Wire into /vibecheck command~~ DONE (plugin.json, commands/, agents/, skills/, hooks/ all in place)
 8. ~~Numbers synced~~ all landing page + README updated to 39 fixed / 50 tests
-9. Demo video
-10. Deploy landing page (GitHub Pages)
+9. Demo video (need asciinema or screen recording tool)
+10. ~~Deploy landing page (GitHub Pages)~~ DONE -> https://yonkoo11.github.io/vibe-check/
 
-## Visual Overhaul (2026-02-10) - DONE
+## IN PROGRESS - Score Card Bloom
+- Bloom behind score card still too subtle despite 3 iterations
+- Last values: 600x600px, blur(90px), green 0.8 center, opacity 0.85-1.0 pulse
+- Card glass: rgba(12,12,22,0.55), blur(20px) saturate(1.3)
+- Need to study wrapped.abs.xyz for inspiration on making things feel alive
+- User wants the WHOLE page to feel alive like wrapped.abs.xyz
+
+## IN PROGRESS - Study wrapped.abs.xyz
+- User shared https://wrapped.abs.xyz/ as design reference
+- "each character was carefully placed and came fully alive"
+- Need to analyze their techniques and apply to our page
+
+## Fluid Blob Background (2026-02-10) - DONE
+- Replaced static gradient-mesh + orbs with 5 animated morphing blobs
+- Each blob: 450-700px, rgba 0.2-0.4, blur(120px), unique blobMorph keyframes (18-30s)
+- Organic border-radius animation creates lava-lamp-like fluid movement
+- Base darkened to #060612 so blobs pop
+- Removed mix-blend-mode: screen (caused whiteout when layers stacked)
+- Atmosphere + section atmo dialed back to complement blobs (not compete)
+- Score card bloom: 800px, 1.15x pulse
+- Before/after section: rebuilt with terminal chrome, traffic light dots, line numbers, syntax highlighting, VULNERABLE/SECURE badges
+- Design lessons file started: ai/design-lessons.md
+
+## Visual Overhaul (2026-02-10) - DONE (superseded by blob system)
 - Body background: gradient mesh (green/purple/cyan radials) instead of flat #0c0c14
 - Orbs: 2x opacity boost (0.14->0.25), reduced blur (100->80px) for sharper color
 - Hero spotlight beam: conic-gradient beam from top center
