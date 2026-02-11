@@ -634,6 +634,16 @@
     50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
   }
 
+  .score-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: rgba(255, 255, 255, 0.4);
+    z-index: 1;
+    margin-bottom: 4px;
+  }
+
   .score-stage {
     position: relative;
     width: 260px;
@@ -2290,7 +2300,7 @@
   <div class="hero-beam" aria-hidden="true"></div>
   <div class="content-layer">
   <nav class="nav" role="navigation" aria-label="Main navigation">
-    <span class="nav-brand">VIBE <span class="nav-brand-accent">CHECK</span></span>
+    <span class="nav-brand">VIBE <span class="nav-brand-accent">AUDITOR</span></span>
     <ul class="nav-links">
       <li><a href="#demo">Demo</a></li>
       <li><a href="#agents">Agents</a></li>
@@ -2328,6 +2338,7 @@
 
     <div class="hero-score">
       <div class="score-card-bloom-wrap" aria-hidden="true"><div class="score-card-bloom"></div></div>
+      <div class="score-label">Vibe Score</div>
       <div class="score-stage">
         <div class="score-grade score-grade-f" id="gradeFrom">F</div>
         <div class="score-grade score-grade-b" id="gradeTo">B+</div>
@@ -2562,7 +2573,7 @@
   <footer class="site-footer">
     <div class="footer-content">
       <div class="footer-left">
-        <div class="footer-logo">VIBE <span>CHECK</span></div>
+        <div class="footer-logo">VIBE <span>AUDITOR</span></div>
         <p class="footer-tagline">Built for Claude Code Hackathon | Feb 2026</p>
       </div>
       <div class="footer-links">
