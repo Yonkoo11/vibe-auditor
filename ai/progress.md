@@ -85,6 +85,21 @@ Last updated: 2026-02-11
 - All 5 blobs, atmosphere layers, tile gradients, dividers updated to new palette
 - Tertiary CSS var changed from #7c5cfc to #f0a030
 
+## Score Card Redesign (2026-02-11) - DONE
+- Killed: glass card, arc gauge, stat boxes, animated border, card header, score arrows, social proof bar
+- Replaced with: massive F→B+ grade morph (scroll-linked), small mono "39 fixed · 50 tests" below
+- Net: -600 lines of slop
+- Renamed "How It Works" → "Under the hood"
+- Fixed meta text contrast: var(--muted) → rgba(255,255,255,0.85), numbers to #fff bold
+
+## UX Knowledge System (2026-02-11) - DONE
+- 4 parallel research agents: typography, hierarchy, interaction, dark UI examples
+- Sources: iA, Erik Kennedy, Butterick, Krug, Nielsen, Wroblewski, Friedman, Norman, Spool, Verou, Soueidan, Material Design 3, Linear, Vercel, GitHub, Raycast, Stripe, Arc
+- **UX_MASTERY.md**: ~/System/guides/UX_MASTERY.md (734 lines, 10 sections)
+- **UX_CHECKLIST.md**: ~/System/guides/UX_CHECKLIST.md (44 items, 6 categories)
+- Wired into /design skill: Phase 2 (proposals), Phase 4 (polish), Phase 5 (QA gate)
+- Raw research: ai/ux-research-{typography,hierarchy,interaction,dark-ui}.md
+
 ## Exquisite Animation Upgrade (2026-02-11) - DONE
 All 5 features from plan implemented in proposal-3.html + docs/index.html:
 1. **Scroll Velocity Tracker**: rAF loop, EMA smoothing, --scroll-speed CSS var, window._scrollSpeed
